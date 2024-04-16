@@ -1,0 +1,10 @@
+﻿  Entity.cpp
+  Game.cpp
+  Object.cpp
+  Player.cpp
+  ResourceManager.cpp
+  Scene.cpp
+  TileMap.cpp
+  main.cpp
+  Generating Code...
+  BubbleBobble.vcxproj -> C:\Users\alons\Desktop\UPC\BubbleBobble\x64\Debug\BubbleBobble.exe

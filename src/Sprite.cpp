@@ -44,6 +44,10 @@ int Sprite::GetAnimation()
 {
     return current_anim;
 }
+bool Sprite::IsLastFrame()
+{
+    return current_frame == animations[current_anim].frames.size() - 1;
+}
 void Sprite::SetManualMode()
 {
     mode = AnimMode::MANUAL;
