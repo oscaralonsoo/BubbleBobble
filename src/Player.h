@@ -10,10 +10,10 @@
 #define PLAYER_PHYSICAL_HEIGHT	42
 
 //Horizontal speed and vertical speed while falling down
-#define PLAYER_SPEED			2
+#define PLAYER_SPEED			2.6
 
 //When jumping, initial jump speed and maximum falling speed
-#define PLAYER_JUMP_FORCE		15
+#define PLAYER_JUMP_FORCE		16
 
 //Frame delay for updating the jump velocity
 #define PLAYER_JUMP_DELAY		2
