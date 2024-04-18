@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Globals.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\Globals.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\TileMap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\TileMap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\TileMap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\TileMap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Bubble.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\Bubble.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Scene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\Scene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Bubble.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99AF8D03-6866-448B-9D94-8961F98DC867}|BubbleBobble.vcxproj|solutionrelative:src\\Bubble.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,54 +30,54 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Scene.cpp",
-              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Scene.cpp",
-              "RelativeDocumentMoniker": "src\\Scene.cpp",
-              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Scene.cpp",
-              "RelativeToolTip": "src\\Scene.cpp",
-              "ViewState": "AQIAAE4AAAAAAAAAAAAAAFcAAAAiAAAA",
+              "DocumentIndex": 1,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Player.cpp",
+              "RelativeDocumentMoniker": "src\\Player.cpp",
+              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Player.cpp",
+              "RelativeToolTip": "src\\Player.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-04-16T15:54:21.99Z",
+              "WhenOpened": "2024-04-18T15:19:07.625Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Globals.h",
-              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Globals.h",
-              "RelativeDocumentMoniker": "src\\Globals.h",
-              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Globals.h",
-              "RelativeToolTip": "src\\Globals.h",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAswBsAAAAVAAAA",
+              "Title": "Player.h",
+              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Player.h",
+              "RelativeDocumentMoniker": "src\\Player.h",
+              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Player.h",
+              "RelativeToolTip": "src\\Player.h",
+              "ViewState": "AQIAADAAAAAAAAAAAAAiwFAAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-16T15:52:46.906Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "TileMap.h",
-              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\TileMap.h",
-              "RelativeDocumentMoniker": "src\\TileMap.h",
-              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\TileMap.h",
-              "RelativeToolTip": "src\\TileMap.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACsAAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-16T15:45:02.535Z",
+              "WhenOpened": "2024-04-18T14:49:14.57Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "TileMap.cpp",
-              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\TileMap.cpp",
-              "RelativeDocumentMoniker": "src\\TileMap.cpp",
-              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\TileMap.cpp",
-              "RelativeToolTip": "src\\TileMap.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAA+AAAA",
+              "Title": "Bubble.h",
+              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Bubble.h",
+              "RelativeDocumentMoniker": "src\\Bubble.h",
+              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Bubble.h",
+              "RelativeToolTip": "src\\Bubble.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-04-18T14:49:08.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Bubble.cpp",
+              "DocumentMoniker": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Bubble.cpp",
+              "RelativeDocumentMoniker": "src\\Bubble.cpp",
+              "ToolTip": "C:\\Users\\alons\\Desktop\\UPC\\BubbleBobble\\src\\Bubble.cpp",
+              "RelativeToolTip": "src\\Bubble.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAADAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-04-16T15:51:42.445Z",
+              "WhenOpened": "2024-04-18T14:48:28.049Z",
               "EditorCaption": ""
             }
           ]

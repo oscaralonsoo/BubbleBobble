@@ -60,6 +60,9 @@
     <ClInclude Include="src\StaticImage.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\Bubble.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Globals.cpp">
@@ -100,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="src\StaticImage.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bubble.cpp">
+      <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
