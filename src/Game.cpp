@@ -8,6 +8,7 @@ Game::Game()
     state = GameState::MAIN_MENU;
     scene = nullptr;
     img_menu = nullptr;
+ 
 
     target = {};
     src = {};
@@ -30,6 +31,11 @@ AppStatus Game::Initialise(float scale)
 
     //Initialise window
     InitWindow((int)w, (int)h, "Bubble Bobble");
+
+    //Initialise audio
+    InitAudioDevice();
+    Sound  music = LoadSound("Music/introduction.ogg");
+    PlaySound(music);
 
     //Render texture initialisation, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -148,6 +154,7 @@ void Game::Render()
 void Game::Cleanup()
 {
     UnloadResources();
+    CloseAudioDevice();
     CloseWindow();
 }
 void Game::UnloadResources()
