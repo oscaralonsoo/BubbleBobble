@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include "Player.h"
+#include "Bubble.h"
 #include "TileMap.h"
 #include "Object.h"
 

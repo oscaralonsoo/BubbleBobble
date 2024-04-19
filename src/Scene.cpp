@@ -23,6 +23,12 @@ Scene::~Scene()
 		delete player;
 		player = nullptr;
 	}
+	if (bubble != nullptr)
+	{
+		bubble->Release();
+		delete bubble;
+		bubble = nullptr;
+	}
     if (level != nullptr)
     {
 		level->Release();
@@ -48,6 +54,18 @@ AppStatus Scene::Init()
 	if (player->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Player");
+		return AppStatus::ERROR;
+	}
+	bubble = new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT);
+	if (bubble == nullptr)
+	{
+		LOG("Failed to allocate memory for Bubble");
+		return AppStatus::ERROR;
+	}
+	//Initialise player
+	if (bubble->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Bubble");
 		return AppStatus::ERROR;
 	}
 	//Create level 
