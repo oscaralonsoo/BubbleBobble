@@ -5,6 +5,7 @@
 Scene::Scene()
 {
 	player = nullptr;
+	bubble = nullptr;
     level = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
@@ -37,7 +38,7 @@ Scene::~Scene()
 AppStatus Scene::Init()
 {
 	//Create player
-	player = new Player(PLAYER_SPAWN, State::IDLE, Look::RIGHT);
+	player = new Player(PLAYER_SPAWN, PlayerState::IDLE, Look::RIGHT);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -49,7 +50,6 @@ AppStatus Scene::Init()
 		LOG("Failed to initialise Player");
 		return AppStatus::ERROR;
 	}
-
 	//Create level 
     level = new TileMap();
     if (level == nullptr)
@@ -71,6 +71,8 @@ AppStatus Scene::Init()
 	}
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
+	bubble->SetTileMap(level);
+
 
     return AppStatus::OK;
 }
@@ -165,6 +167,13 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				player->SetPos(pos);
 				map[i] = 0;
+			}
+			else if (tile == Tile::BUBBLE)
+			{
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				bubble->SetPos(pos);
+				map[i] = 0;
 			}/*
 			else if (tile == Tile::ITEM_APPLE)
 			{
@@ -206,6 +215,7 @@ void Scene::Update()
 
 	level->Update();
 	player->Update();
+	bubble->Update();
 	CheckCollisions();
 }
 void Scene::Render()
@@ -217,6 +227,7 @@ void Scene::Render()
 	{
 		RenderObjects(); 
 		player->Draw();
+		bubble->Draw();
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
@@ -232,6 +243,7 @@ void Scene::Release()
 {
     level->Release();
 	player->Release();
+	bubble->Release();
 	ClearLevel();
 }
 void Scene::CheckCollisions()

@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Bubble.h"
 #include "TileMap.h"
 
 //Representation model size: 48x48
@@ -35,7 +36,7 @@
 #define ANIM_SHOOTING_DELAY		3
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, FALLING, SHOOTING, DEAD };
+enum class PlayerState { IDLE, WALKING, JUMPING, FALLING, SHOOTING, DEAD };
 enum class Look { RIGHT, LEFT };
 
 //Rendering states
@@ -51,7 +52,7 @@ enum class PlayerAnim {
 class Player: public Entity
 {
 public:
-	Player(const Point& p, State s, Look view);
+	Player(const Point& p, PlayerState s, Look view);
 	~Player();
 	
 	AppStatus Initialise();
@@ -92,9 +93,11 @@ private:
 	bool IsAscending() const;
 	bool IsDescending() const;
 
-	State state;
+	PlayerState state;
 	Look look;
 	int jump_delay;
+
+	Bubble* bubble;
 
 	TileMap *map;
 

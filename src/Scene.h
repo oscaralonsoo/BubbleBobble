@@ -27,7 +27,8 @@ private:
 
     void RenderGUI() const;
 
-    Player *player;
+    Player* player;
+    Bubble* bubble;
     TileMap *level;
     std::vector<Object*> objects;
 
