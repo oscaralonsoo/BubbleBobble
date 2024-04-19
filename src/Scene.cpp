@@ -37,7 +37,7 @@ Scene::~Scene()
 AppStatus Scene::Init()
 {
 	//Create player
-	player = new Player({ 0,0 }, State::IDLE, Look::RIGHT);
+	player = new Player(PLAYER_SPAWN, State::IDLE, Look::RIGHT);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
