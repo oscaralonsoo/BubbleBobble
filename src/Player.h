@@ -6,7 +6,7 @@
 #define PLAYER_FRAME_SIZE		48
 
 //Logical model size: 12x28
-#define PLAYER_PHYSICAL_WIDTH	18
+#define PLAYER_PHYSICAL_WIDTH	25
 #define PLAYER_PHYSICAL_HEIGHT	42
 
 //Horizontal speed and vertical speed while falling down
@@ -19,10 +19,13 @@
 #define PLAYER_JUMP_DELAY		2
 
 //Player is levitating when abs(speed) <= this value
-#define PLAYER_LEVITATING_SPEED	4
+#define PLAYER_LEVITATING_SPEED	0
 
 //Gravity affects jumping velocity when jump_delay is 0
 #define GRAVITY_FORCE			1
+
+//Player spawn position 
+#define PLAYER_SPAWN			{75, 595}
 
 //Player animations delay
 #define ANIM_IDLE_DELAY			18
@@ -42,8 +45,6 @@ enum class PlayerAnim {
 	JUMPING_LEFT, JUMPING_RIGHT,
 	FALLING_LEFT, FALLING_RIGHT,
 	SHOOTING_LEFT, SHOOTING_RIGHT,
-	SHOCK_LEFT, SHOCK_RIGHT,
-	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
 };
 

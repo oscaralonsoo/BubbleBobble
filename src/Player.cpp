@@ -149,11 +149,10 @@ void Player::StartJumping()
 	state = State::JUMPING;
 	if (IsLookingRight())	SetAnimation((int)PlayerAnim::JUMPING_RIGHT);
 	else					SetAnimation((int)PlayerAnim::JUMPING_LEFT);
-	jump_delay = PLAYER_JUMP_DELAY;
+	jump_delay = PLAYER_JUMP_DELAY;	
 }
 void Player::StartShooting()
 {
-	state = State::SHOOTING;
 	if (IsLookingRight())	SetAnimation((int)PlayerAnim::SHOOTING_RIGHT);
 	else					SetAnimation((int)PlayerAnim::SHOOTING_LEFT);
 }
@@ -183,10 +182,9 @@ void Player::ChangeAnimLeft()
 }
 void Player::Update()
 {
-	//Player doesn't use the "Entity::Update() { pos += dir; }" default behaviour.
-	//Instead, uses an independent behaviour for each axis.
 	MoveX();
 	MoveY();
+
 	Shoot();
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
@@ -257,24 +255,39 @@ void Player::MoveY()
 		}
 		else
 		{
-			if (state != State::FALLING) StartFalling();
+			StartFalling();
 		}
 	}
 }
 void Player::Shoot()
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
-	
-	if (state != State::SHOOTING)
+
+	if (GetAnimation() == PlayerAnim::SHOOTING_LEFT || GetAnimation() == PlayerAnim::SHOOTING_RIGHT)
+	{
+		if (sprite->IsLastFrame())
+		{
+			if (state == State::JUMPING) 
+			{
+				if (IsLookingRight())	SetAnimation((int)PlayerAnim::JUMPING_RIGHT);
+				else SetAnimation((int)	PlayerAnim::JUMPING_LEFT);
+			}
+			else if (state == State::FALLING)
+			{
+				if (IsLookingRight())	SetAnimation((int)PlayerAnim::FALLING_RIGHT);
+				else SetAnimation((int)PlayerAnim::FALLING_LEFT);
+			}
+			else {
+				Stop();
+			}
+		}
+	}
+	else
 	{
 		if (IsKeyDown(KEY_X))
 		{
 			StartShooting();
 		}
-	}
-	else
-	{
-		if (sprite->IsLastFrame()) Stop();
 	}
 }
 void Player::LogicJumping()
@@ -300,16 +313,19 @@ void Player::LogicJumping()
 		}
 		else
 		{
-			//Jumping is represented with 2 different states
-			if (IsAscending())
+			if (GetAnimation() != PlayerAnim::SHOOTING_RIGHT && GetAnimation() != PlayerAnim::SHOOTING_LEFT)
 			{
-				if (IsLookingRight())	SetAnimation((int)PlayerAnim::JUMPING_RIGHT);
-				else					SetAnimation((int)PlayerAnim::JUMPING_LEFT);
-			}
-			else if (IsDescending())
-			{
-				if (IsLookingRight())	SetAnimation((int)PlayerAnim::FALLING_RIGHT);
-				else					SetAnimation((int)PlayerAnim::FALLING_LEFT);
+				//Jumping is represented with 2 different states
+				if (IsAscending())
+				{
+					if (IsLookingRight())	SetAnimation((int)PlayerAnim::JUMPING_RIGHT);
+					else					SetAnimation((int)PlayerAnim::JUMPING_LEFT);
+				}
+				else if (IsDescending())
+				{
+					if (IsLookingRight())	SetAnimation((int)PlayerAnim::FALLING_RIGHT);
+					else					SetAnimation((int)PlayerAnim::FALLING_LEFT);
+				}
 			}
 		}
 		//We check ground collision when jumping down

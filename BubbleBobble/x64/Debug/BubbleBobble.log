@@ -1,24 +1,12 @@
-﻿  AABB.cpp
-  Bubble.cpp
-  Entity.cpp
-  Game.cpp
-  Globals.cpp
-  main.cpp
-  Object.cpp
+﻿  Game.cpp
   Player.cpp
-  RenderComponent.cpp
-  ResourceManager.cpp
-C:\Users\davig\Desktop\BubbleBobble\src\Player.cpp(141,10): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\davig\Desktop\BubbleBobble\src\Player.cpp(202,13): warning C4244: '+=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\davig\Desktop\BubbleBobble\src\Player.cpp(218,12): warning C4244: '+=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\davig\Desktop\BubbleBobble\src\Player.cpp(247,12): warning C4244: '+=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\davig\Desktop\BubbleBobble\src\Player.cpp(298,12): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(141,10): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(200,13): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(216,12): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(245,12): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(311,12): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Scene.cpp
-C:\Users\davig\Desktop\BubbleBobble\src\Scene.cpp(84,10): warning C4101: 'obj': variable local sin referencia
-  Sprite.cpp
-  StaticImage.cpp
-  TileMap.cpp
-  Generando código...
-  LINK : no se encontró C:\Users\davig\Desktop\BubbleBobble\x64\Debug\BubbleBobble.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
-LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
-  BubbleBobble.vcxproj -> C:\Users\davig\Desktop\BubbleBobble\x64\Debug\BubbleBobble.exe
+C:\Users\alons\Desktop\UPC\BubbleBobble\src\Scene.cpp(84,10): warning C4101: 'obj': unreferenced local variable
+  main.cpp
+  Generating Code...
+  BubbleBobble.vcxproj -> C:\Users\alons\Desktop\UPC\BubbleBobble\x64\Debug\BubbleBobble.exe
