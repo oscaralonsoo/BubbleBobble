@@ -36,9 +36,9 @@ AppStatus Bubble::Initialise()
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->SetNumberAnimations((int)BubbleAnim::NUM_ANIMATIONS);
 
-	sprite->SetAnimationDelay((int)BubbleAnim::LEVITATING, ANIM_DELAY);
+	sprite->SetAnimationDelay((int)BubbleAnim::LEVITATING, 5);
 	sprite->AddKeyFrame((int)BubbleAnim::LEVITATING, { 0, 0, n, n });
-	sprite->SetAnimationDelay((int)BubbleAnim::LAUNCHING, ANIM_DELAY);
+	sprite->SetAnimationDelay((int)BubbleAnim::LAUNCHING, 5);
 	sprite->AddKeyFrame((int)BubbleAnim::LAUNCHING, { 0, 0, n, n });
 
 	return AppStatus::OK;

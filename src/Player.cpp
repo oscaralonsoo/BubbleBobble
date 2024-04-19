@@ -181,7 +181,12 @@ void Player::ChangeAnimLeft()
 	}
 }
 void Player::Update()
-{
+{	
+	for (Bubble* bubble : bubbles)
+	{
+		bubble->Update();
+	}
+
 	MoveX();
 	MoveY();
 
@@ -348,10 +353,10 @@ void Player::LogicJumping()
 }
 void Player::LogicShooting()
 {
-	bubble = new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT);
-	bubble->Initialise();
-	bubble->Release();
-
+	bubbles.push_back(new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT));
+	bubbles[bubbles.size() - 1]->Initialise();
+	bubbles[bubbles.size() - 1]->Draw();
+	Render();
 }
 
 void Player::DrawDebug(const Color& col) const
@@ -360,6 +365,10 @@ void Player::DrawDebug(const Color& col) const
 	
 	DrawText(TextFormat("Position: (%d,%d)\nSize: %dx%d\nFrame: %dx%d", pos.x, pos.y, width, height, frame_width, frame_height), 18*16, 0, 8, LIGHTGRAY);
 	DrawPixel(pos.x, pos.y, WHITE);
+}
+void Render()
+{
+	TraceLog(LOG_INFO, "render");
 }
 void Player::Release()
 {

@@ -5,7 +5,7 @@
 Scene::Scene()
 {
 	player = nullptr;
-	bubble = nullptr;
+	/*bubble = nullptr;*/
     level = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
@@ -23,12 +23,12 @@ Scene::~Scene()
 		delete player;
 		player = nullptr;
 	}
-	if (bubble != nullptr)
+	/*if (bubble != nullptr)
 	{
 		bubble->Release();
 		delete bubble;
 		bubble = nullptr;
-	}
+	}*/
     if (level != nullptr)
     {
 		level->Release();
@@ -56,7 +56,7 @@ AppStatus Scene::Init()
 		LOG("Failed to initialise Player");
 		return AppStatus::ERROR;
 	}
-	bubble = new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT);
+	/*bubble = new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT);
 	if (bubble == nullptr)
 	{
 		LOG("Failed to allocate memory for Bubble");
@@ -67,7 +67,7 @@ AppStatus Scene::Init()
 	{
 		LOG("Failed to initialise Bubble");
 		return AppStatus::ERROR;
-	}
+	}*/
 	//Create level 
     level = new TileMap();
     if (level == nullptr)
@@ -89,7 +89,7 @@ AppStatus Scene::Init()
 	}
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
-	bubble->SetTileMap(level);
+	/*bubble->SetTileMap(level);*/
 
 
     return AppStatus::OK;
@@ -185,14 +185,14 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				player->SetPos(pos);
 				map[i] = 0;
-			}
+			}/*
 			else if (tile == Tile::BUBBLE)
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				bubble->SetPos(pos);
 				map[i] = 0;
-			}/*
+			}*//*
 			else if (tile == Tile::ITEM_APPLE)
 			{
 				pos.x = x * TILE_SIZE;
@@ -233,7 +233,7 @@ void Scene::Update()
 
 	level->Update();
 	player->Update();
-	bubble->Update();
+	/*bubble->Update();*/
 	CheckCollisions();
 }
 void Scene::Render()
@@ -245,7 +245,7 @@ void Scene::Render()
 	{
 		RenderObjects(); 
 		player->Draw();
-		bubble->Draw();
+		/*bubble->Draw(); */
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
@@ -261,7 +261,7 @@ void Scene::Release()
 {
     level->Release();
 	player->Release();
-	bubble->Release();
+	/*bubble->Release();*/
 	ClearLevel();
 }
 void Scene::CheckCollisions()
