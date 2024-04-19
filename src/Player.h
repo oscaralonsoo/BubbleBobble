@@ -6,8 +6,8 @@
 #define PLAYER_FRAME_SIZE		48
 
 //Logical model size: 12x28
-#define PLAYER_PHYSICAL_WIDTH	25
-#define PLAYER_PHYSICAL_HEIGHT	42
+#define PLAYER_PHYSICAL_WIDTH	35
+#define PLAYER_PHYSICAL_HEIGHT	35
 
 //Horizontal speed and vertical speed while falling down
 #define PLAYER_SPEED			2.6
