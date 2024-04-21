@@ -72,8 +72,6 @@ AppStatus Game::LoadResources()
         return AppStatus::ERROR;
     }
     img_title = data.GetTexture(Resource::IMG_TITLE);
-
-    return AppStatus::OK;
     
     if (data.LoadTexture(Resource::IMG_MENU, "images/menu.png") != AppStatus::OK)
     {
@@ -113,13 +111,12 @@ AppStatus Game::Update()
 
     switch (state)
     {
-
         case GameState::MAIN_TITLE:
             if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
-            if (IsKeyPressed(KEY_X))
-             {
-                 state = GameState::MAIN_MENU;
-             }
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                state = GameState::MAIN_MENU;
+            }
             break;
 
         case GameState::MAIN_MENU: 
