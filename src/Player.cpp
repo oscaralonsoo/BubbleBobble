@@ -5,14 +5,16 @@
 #include "Globals.h"
 #include <raymath.h>
 
-Player::Player(const Point& p, PlayerState s, Look view) :
+Player::Player(const Point& p, PlayerState s, Look view, std::vector<Bubble*>& b) :
 	Entity(p, PLAYER_PHYSICAL_WIDTH, PLAYER_PHYSICAL_HEIGHT, PLAYER_FRAME_SIZE, PLAYER_FRAME_SIZE)
 {
 	state = s;
 	look = view;
 	jump_delay = PLAYER_JUMP_DELAY;
 	map = nullptr;
+	bubbles = b;
 	score = 0;
+	current_bubble = 0;
 }
 Player::~Player()
 {
@@ -182,11 +184,6 @@ void Player::ChangeAnimLeft()
 }
 void Player::Update()
 {	
-	for (Bubble* bubble : bubbles)
-	{
-		bubble->Update();
-	}
-
 	MoveX();
 	MoveY();
 
@@ -353,10 +350,17 @@ void Player::LogicJumping()
 }
 void Player::LogicShooting()
 {
-	bubbles.push_back(new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT));
-	bubbles[bubbles.size() - 1]->Initialise();
-	bubbles[bubbles.size() - 1]->Draw();
-	Render();
+	if ((bubbles.size() - 1) > current_bubble)
+	{
+		current_bubble++;
+	}
+	else {
+		current_bubble = 0;
+	}
+
+	bubbles[current_bubble]->StartLaunching(GetPos(), GetDir());
+	bubbles[current_bubble]->state = BubbleState::LAUNCHING;
+	
 }
 
 void Player::DrawDebug(const Color& col) const
@@ -366,10 +370,7 @@ void Player::DrawDebug(const Color& col) const
 	DrawText(TextFormat("Position: (%d,%d)\nSize: %dx%d\nFrame: %dx%d", pos.x, pos.y, width, height, frame_width, frame_height), 18*16, 0, 8, LIGHTGRAY);
 	DrawPixel(pos.x, pos.y, WHITE);
 }
-void Render()
-{
-	TraceLog(LOG_INFO, "render");
-}
+
 void Player::Release()
 {
 	ResourceManager& data = ResourceManager::Instance();

@@ -26,3 +26,6 @@ void log(const char file[], int line, const char* text, ...);
 
 //Entities animation delay
 #define ANIM_DELAY		4
+
+//Maximum of bubbles in game
+#define MAX_BUBBLES     20

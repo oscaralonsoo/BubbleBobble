@@ -14,6 +14,9 @@ public:
 	virtual ~Entity();
 
 	void SetPos(const Point& p);
+	Point GetPos();
+	void SetDir(const Point& d);
+	Point GetDir();
 	void Update();
 	AABB GetHitbox() const;
 

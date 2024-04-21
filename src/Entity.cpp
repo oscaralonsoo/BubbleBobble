@@ -21,6 +21,18 @@ void Entity::SetPos(const Point& p)
 {
 	pos = p;
 }
+Point Entity::GetPos() 
+{
+	return pos;
+}
+void Entity::SetDir(const Point& d)
+{
+	dir = d;
+}
+Point Entity::GetDir()
+{
+	return dir;
+}
 void Entity::Update()
 {
 	pos += dir;

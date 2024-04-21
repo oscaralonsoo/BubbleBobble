@@ -5,7 +5,7 @@
 Scene::Scene()
 {
 	player = nullptr;
-	/*bubble = nullptr;*/
+	bubbles.clear();
     level = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
@@ -23,12 +23,14 @@ Scene::~Scene()
 		delete player;
 		player = nullptr;
 	}
-	/*if (bubble != nullptr)
+	if (!bubbles.empty())
 	{
-		bubble->Release();
-		delete bubble;
-		bubble = nullptr;
-	}*/
+		for (Bubble* bubble : bubbles) {
+			bubble->Release();
+			delete bubble;
+		}
+		bubbles.clear();
+	}
     if (level != nullptr)
     {
 		level->Release();
@@ -43,8 +45,27 @@ Scene::~Scene()
 }
 AppStatus Scene::Init()
 {
+	//Create bubbles
+	for (int i = 0; i < MAX_BUBBLES; i++)
+	{
+		bubbles.push_back(new Bubble(i, PLAYER_SPAWN, BubbleState::DISABLED, Direction::RIGHT));
+	}
+	if (bubbles.empty())
+	{
+		LOG("Failed to allocate memory for Bubble");
+		return AppStatus::ERROR;
+	}
+	//Initialise bubbles
+	for (Bubble* bubble : bubbles) {
+		if (bubble->Initialise() != AppStatus::OK)
+		{
+			LOG("Failed to initialise Bubble");
+			return AppStatus::ERROR;
+		}
+	}
+
 	//Create player
-	player = new Player(PLAYER_SPAWN, PlayerState::IDLE, Look::RIGHT);
+	player = new Player(PLAYER_SPAWN, PlayerState::IDLE, Look::RIGHT, bubbles);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -56,18 +77,40 @@ AppStatus Scene::Init()
 		LOG("Failed to initialise Player");
 		return AppStatus::ERROR;
 	}
-	/*bubble = new Bubble(PLAYER_SPAWN, BubbleState::LAUNCHING, Direction::RIGHT);
-	if (bubble == nullptr)
+	
+	//Create enemy
+	enemy = new Enemy(PLAYER_SPAWN, EnemyState::IDLE, EnemyLook::RIGHT);
+	if (enemy == nullptr)
 	{
-		LOG("Failed to allocate memory for Bubble");
+		LOG("Failed to allocate memory for Enemy");
 		return AppStatus::ERROR;
 	}
 	//Initialise player
-	if (bubble->Initialise() != AppStatus::OK)
+	if (enemy->Initialise() != AppStatus::OK)
 	{
-		LOG("Failed to initialise Bubble");
+		LOG("Failed to initialise Enemy");
 		return AppStatus::ERROR;
-	}*/
+	}
+
+	//Create lifes
+	/*for (int i = 0; i < MAX_BUBBLES; i++)
+	{
+		lifes.push_back(new Lifes(PLAYER_SPAWN));
+	}
+	if (lifes.empty())
+	{
+		LOG("Failed to allocate memory for Lifes");
+		return AppStatus::ERROR;
+	}
+	//Initialise lifes
+	for (Lifes* life : lifes) {
+		if (life->Initialise() != AppStatus::OK)
+		{
+			LOG("Failed to initialise Lifes");
+			return AppStatus::ERROR;
+		}
+	}
+	*/
 	//Create level 
     level = new TileMap();
     if (level == nullptr)
@@ -89,6 +132,8 @@ AppStatus Scene::Init()
 	}
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
+	enemy->SetTileMap(level);
+
 	/*bubble->SetTileMap(level);*/
 
 
@@ -112,13 +157,13 @@ AppStatus Scene::LoadLevel(int stage)
 			 2,   3,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   2,   3,
 			 2,   3,   9,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   6,   5,   5,   5,   5,   5,   7,   0,   0,   0,   6,   5,   5,   5,   5,   5,   5,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
-			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
+			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101, 0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   9,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   0,   0,   5,   5,   5,   5,   5,   5,   5,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
-			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
-			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
+			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101, 0,   1,   4,   0,   0,   2,   3,
+			 2,   3,   4,   0,   0,   1,   4,   0,   101,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101,   0,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   9,   5,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   5,   5,   5,   5,   5,   5,   5,   5,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
@@ -127,7 +172,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 2,   3,   4,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   6,   5,   5,   5,   5,   5,   5,   5,   5,   5,   7,   0,   5,   5,   5,   5,   5,   5,   5,   5,   5,   5,   7,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
-			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
+			 2,   3,   4,   0,   0,   100, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   1,   1,   1,   1,   1,   8,   0,   1,   1,   1,   8,   0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   8,   0,   1,   1,   1,   1,   1,   2,   3,
 			 2,   3,   9,   5,   5,   5,   5,   7,   0,   6,   5,   5,   7,   0,   0,   0,   0,   0,   0,   0,   6,   5,   5,   7,   0,   6,   5,   5,   5,   5,   2,   3,
@@ -185,30 +230,14 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				player->SetPos(pos);
 				map[i] = 0;
-			}/*
-			else if (tile == Tile::BUBBLE)
+			}
+			else if (tile == Tile::ENEMY)
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				bubble->SetPos(pos);
-				map[i] = 0;
-			}*//*
-			else if (tile == Tile::ITEM_APPLE)
-			{
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::APPLE);
-				objects.push_back(obj);
+				enemy->SetPos(pos);
 				map[i] = 0;
 			}
-			else if (tile == Tile::ITEM_CHILI)
-			{
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::CHILI);
-				objects.push_back(obj);
-				map[i] = 0;
-			}*/
 			++i;
 		}
 	}
@@ -233,7 +262,10 @@ void Scene::Update()
 
 	level->Update();
 	player->Update();
-	/*bubble->Update();*/
+	enemy->Update();
+	for (Bubble* bubble : bubbles) {
+		bubble->Update();
+	}
 	CheckCollisions();
 }
 void Scene::Render()
@@ -245,7 +277,10 @@ void Scene::Render()
 	{
 		RenderObjects(); 
 		player->Draw();
-		/*bubble->Draw(); */
+		enemy->Draw();
+		for (Bubble* bubble : bubbles) {
+			bubble->Draw();
+		}
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
@@ -261,7 +296,10 @@ void Scene::Release()
 {
     level->Release();
 	player->Release();
-	/*bubble->Release();*/
+	enemy->Release();
+	for (Bubble* bubble : bubbles) {
+		bubble->Release();
+	}
 	ClearLevel();
 }
 void Scene::CheckCollisions()
@@ -315,4 +353,9 @@ void Scene::RenderGUI() const
 {
 	//Temporal approach
 	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
+
+
+	/*for (Lifes* life : lifes) {
+		life->Draw();
+	}*/
 }

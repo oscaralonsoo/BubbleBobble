@@ -10,39 +10,50 @@
 #define BUBBLE_PHYSICAL_HEIGHT	35
 
 //Horizontal speed and vertical speed while falling down
-#define BUBBLE_SPEED			2.6
+#define BUBBLE_SPEED			7
 
 //Player animations delay
 #define ANIM_DELAY				10
 
 
-enum class BubbleState { LAUNCHING, LEVITATING};
+enum class BubbleState { DISABLED, LAUNCHING, LEVITATING};
 enum class Direction { RIGHT, LEFT };
 
 //Rendering states
 enum class BubbleAnim {
-	LAUNCHING, LEVITATING,
+	DISABLED, LAUNCHING, LEVITATING,
 	NUM_ANIMATIONS
 };
 
 class Bubble : public Entity
 {
 public:
-	Bubble(const Point& p, BubbleState s, Direction dir);
+	Bubble(int id, const Point& p, BubbleState s, Direction dir);
 	~Bubble();
 
 	void Update();
-	void Stop();
+
+	// Animation management
 	void SetAnimation(int id);
+	BubbleAnim GetAnimation();
+	void Disable();
+	void StartLaunching(Point pos, Point dir);
+	void StartLevitating();
+
+	void LogicLaunching();
+	void LogicLevitating();
+	void HandleStates();
 
 	AppStatus Initialise();
 	void Release();
 	void SetTileMap(TileMap* tilemap);
 
-private:
 	BubbleState state;
+
+
+private:
 	Direction direction;
 
 	TileMap* map;
-
+	int bubbleId;
 };

@@ -52,11 +52,10 @@ enum class PlayerAnim {
 class Player: public Entity
 {
 public:
-	Player(const Point& p, PlayerState s, Look view);
+	Player(const Point& p, PlayerState s, Look view, std::vector<Bubble*>& b);
 	~Player();
 	
 	AppStatus Initialise();
-	void Render();
 	void SetTileMap(TileMap* tilemap);
 
 	void InitScore();
@@ -66,8 +65,6 @@ public:
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
-
-	std::vector<Bubble*> bubbles;
 
 private:
 	bool IsLookingRight() const;
@@ -99,9 +96,10 @@ private:
 	PlayerState state;
 	Look look;
 	int jump_delay;
-
+	std::vector<Bubble*> bubbles;
 	TileMap *map;
 
 	int score;
+	int current_bubble;
 };
 
