@@ -20,6 +20,8 @@ public:
     void Render();
     void Release();
 
+    Player* player;
+
 private:
     AppStatus LoadLevel(int stage);
     
@@ -30,7 +32,6 @@ private:
 
     void RenderGUI() const;
 
-    Player* player;
     std::vector<Enemy*> enemies;
     std::vector<Bubble*> bubbles;
     std::vector<Object*> objects;

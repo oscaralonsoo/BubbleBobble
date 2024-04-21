@@ -72,6 +72,12 @@ AppStatus Game::LoadResources()
         return AppStatus::ERROR;
     }
     img_title = data.GetTexture(Resource::IMG_TITLE);
+
+    if (data.LoadTexture(Resource::IMG_LOOSE, "images/gameover.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_loose = data.GetTexture(Resource::IMG_LOOSE);
     
     if (data.LoadTexture(Resource::IMG_MENU, "images/menu.png") != AppStatus::OK)
     {
@@ -134,10 +140,22 @@ AppStatus Game::Update()
                 FinishPlay();
                 state = GameState::MAIN_MENU;
             }
+            else if (scene->player->GetLifes() <= 0)
+            {
+                FinishPlay();
+                state = GameState::LOOSE;
+            }
             else
             {
                 //Game logic
                 scene->Update();
+            }
+            break;
+        case GameState::LOOSE:
+            if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                state = GameState::MAIN_MENU;
             }
             break;
     }
@@ -151,9 +169,9 @@ void Game::Render()
     
     switch (state)
     {
-    case GameState::MAIN_TITLE:
-        DrawTexture(*img_title, 0, 0, WHITE);
-        break;
+        case GameState::MAIN_TITLE:
+            DrawTexture(*img_title, 0, 0, WHITE);
+            break;
 
         case GameState::MAIN_MENU:
             DrawTexture(*img_menu, 0, 0, WHITE);
@@ -161,6 +179,10 @@ void Game::Render()
 
         case GameState::PLAYING:
             scene->Render();
+            break;
+
+        case GameState::LOOSE:
+            DrawTexture(*img_loose, 0, 0, WHITE);
             break;
     }
     
