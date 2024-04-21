@@ -33,11 +33,13 @@ public:
 
 	void Update();
 
+	void DrawDebug(const Color& col) const;
+
 	// Animation management
 	void SetAnimation(int id);
 	BubbleAnim GetAnimation();
 	void Disable();
-	void StartLaunching(Point pos, Point dir);
+	void StartLaunching(Point pos, int dir);
 	void StartLevitating();
 
 	void LogicLaunching();
@@ -52,7 +54,7 @@ public:
 
 
 private:
-	Direction direction;
+	int direction;
 
 	TileMap* map;
 	int bubbleId;

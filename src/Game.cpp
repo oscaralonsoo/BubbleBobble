@@ -34,9 +34,9 @@ AppStatus Game::Initialise(float scale)
     InitWindow((int)w, (int)h, "Bubble Bobble");
 
     //Initialise audio
-    InitAudioDevice();
+    /*InitAudioDevice();
     Sound  music = LoadSound("Music/introduction.ogg");
-    PlaySound(music);
+    PlaySound(music);*/
 
     //Render texture initialisation, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
