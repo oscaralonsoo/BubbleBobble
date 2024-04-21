@@ -3,7 +3,9 @@
 #include "Player.h"
 #include "Bubble.h"
 #include "TileMap.h"
+#include "Lifes.h"
 #include "Object.h"
+#include "Enemy.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
@@ -29,9 +31,11 @@ private:
     void RenderGUI() const;
 
     Player* player;
-    Bubble* bubble;
-    TileMap *level;
+    Enemy* enemy;
+    std::vector<Bubble*> bubbles;
     std::vector<Object*> objects;
+    /*std::vector<Lifes*> lifes;*/
+    TileMap* level;
 
     Camera2D camera;
     DebugMode debug;

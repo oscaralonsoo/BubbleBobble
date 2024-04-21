@@ -20,7 +20,7 @@ enum class Tile {
 
 	// id >= 100: entities' initial locations
 	PLAYER = 100,
-	BUBBLE,
+	ENEMY = 101,
 
 	//Intervals
 	STATIC_FIRST = BLOCK_SQUARE1,
@@ -28,7 +28,7 @@ enum class Tile {
 	SOLID_FIRST = BLOCK_SQUARE1,
 	SOLID_LAST = BLOCK_WALL_R,
 	ENTITY_FIRST = PLAYER,
-	ENTITY_LAST = BUBBLE
+	ENTITY_LAST = ENEMY
 };
 
 class TileMap
