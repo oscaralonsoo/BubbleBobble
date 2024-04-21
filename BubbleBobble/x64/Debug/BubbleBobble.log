@@ -1,12 +1,2 @@
-﻿  Game.cpp
-  Player.cpp
-C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(141,10): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(200,13): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(216,12): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(245,12): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-C:\Users\alons\Desktop\UPC\BubbleBobble\src\Player.cpp(311,12): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  Scene.cpp
-C:\Users\alons\Desktop\UPC\BubbleBobble\src\Scene.cpp(84,10): warning C4101: 'obj': unreferenced local variable
-  main.cpp
-  Generating Code...
+﻿  Enemy.cpp
   BubbleBobble.vcxproj -> C:\Users\alons\Desktop\UPC\BubbleBobble\x64\Debug\BubbleBobble.exe

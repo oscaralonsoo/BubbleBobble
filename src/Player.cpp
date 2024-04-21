@@ -14,6 +14,7 @@ Player::Player(const Point& p, PlayerState s, Look view, std::vector<Bubble*>& b
 	map = nullptr;
 	bubbles = b;
 	score = 0;
+	lifes = 2;
 	current_bubble = 0;
 }
 Player::~Player()
@@ -75,6 +76,13 @@ AppStatus Player::Initialise()
 	sprite->AddKeyFrame((int)PlayerAnim::JUMPING_LEFT, { 0, 3*n, n, n });
 	sprite->AddKeyFrame((int)PlayerAnim::JUMPING_LEFT, { n, 3*n, n, n });
 
+	sprite->SetAnimationDelay((int)PlayerAnim::DEAD_RIGHT, ANIM_DEAD_DELAY);
+	for (i = 0; i < 16; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::DEAD_RIGHT, { (float)i * n, 5*n, -n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::DEAD_LEFT, ANIM_DEAD_DELAY);
+	for (i = 0; i < 16; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::DEAD_LEFT, { (float)i * n, 5*n, n, n });
+
 	bubbleSound = LoadSound("Sprites/SFX/soundbubble.wav");
 	bubbleJump = LoadSound("Sprites/SFX/soundjump.wav");
 
@@ -91,6 +99,18 @@ void Player::IncrScore(int n)
 int Player::GetScore()
 {
 	return score;
+}
+void Player::InitLifes()
+{
+	lifes = 0;
+}
+void Player::DecrLifes()
+{
+	lifes -= 1;
+}
+int Player::GetLifes()
+{
+	return lifes;
 }
 void Player::SetTileMap(TileMap* tilemap)
 {
@@ -167,6 +187,16 @@ void Player::StartShooting()
 
 	PlaySound(bubbleSound);
 }
+void Player::StartDeath()
+{
+	if (GetAnimation() != PlayerAnim::DEAD_LEFT && GetAnimation() != PlayerAnim::DEAD_RIGHT)
+	{
+		state = PlayerState::DEAD;
+		DecrLifes();
+		if (IsLookingRight())	SetAnimation((int)PlayerAnim::DEAD_RIGHT);
+		else					SetAnimation((int)PlayerAnim::DEAD_LEFT);
+	}
+}
 void Player::ChangeAnimRight()
 {
 	look = Look::RIGHT;
@@ -177,6 +207,7 @@ void Player::ChangeAnimRight()
 		case PlayerState::JUMPING: SetAnimation((int)PlayerAnim::JUMPING_RIGHT); break;
 		case PlayerState::FALLING: SetAnimation((int)PlayerAnim::FALLING_RIGHT); break;
 		case PlayerState::SHOOTING: SetAnimation((int)PlayerAnim::SHOOTING_RIGHT); break;
+		case PlayerState::DEAD: SetAnimation((int)PlayerAnim::DEAD_RIGHT); break;
 	}
 }
 void Player::ChangeAnimLeft()
@@ -189,14 +220,22 @@ void Player::ChangeAnimLeft()
 		case PlayerState::JUMPING: SetAnimation((int)PlayerAnim::JUMPING_LEFT); break;
 		case PlayerState::FALLING: SetAnimation((int)PlayerAnim::FALLING_LEFT); break;
 		case PlayerState::SHOOTING: SetAnimation((int)PlayerAnim::SHOOTING_LEFT); break;
+		case PlayerState::DEAD: SetAnimation((int)PlayerAnim::DEAD_LEFT); break;
 	}
 }
 void Player::Update()
 {	
-	MoveX();
-	MoveY();
+	if (state == PlayerState::DEAD)
+	{
+		LogicDead();
+	}
+	else
+	{
+		MoveX();
+		MoveY();
 
-	Shoot();
+		Shoot();
+	}
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
@@ -302,6 +341,20 @@ void Player::Shoot()
 		}
 	}
 }
+void Player::LogicDead()
+{
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+
+	if (GetAnimation() == PlayerAnim::DEAD_LEFT || GetAnimation() == PlayerAnim::DEAD_RIGHT)
+	{
+		if (sprite->IsLastFrame())
+		{
+			SetPos(PLAYER_SPAWN);
+			Stop();
+			ChangeAnimRight();
+		}
+	}
+}
 void Player::LogicJumping()
 {
 	AABB box, prev_box;
@@ -367,7 +420,7 @@ void Player::LogicShooting()
 		current_bubble = 0;
 	}
 
-	bubbles[current_bubble]->StartLaunching(GetPos(), GetDir());
+	bubbles[current_bubble]->StartLaunching(GetPos(), (int)look);
 	bubbles[current_bubble]->state = BubbleState::LAUNCHING;
 	
 }

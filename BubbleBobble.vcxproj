@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClInclude Include="src\AABB.h" />
     <ClInclude Include="src\Bubble.h" />
+    <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\Lifes.h" />
     <ClInclude Include="src\MemLeaks.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Player.h" />
@@ -38,9 +40,11 @@
   <ItemGroup>
     <ClCompile Include="src\AABB.cpp" />
     <ClCompile Include="src\Bubble.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Globals.cpp" />
+    <ClCompile Include="src\Lifes.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -76,7 +80,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -104,8 +108,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\oscarac8\Documents\GitHub\BubbleBobble\raylib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\oscarac8\Documents\GitHub\BubbleBobble\raylib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alons\Desktop\UPC\BubbleBobble\raylib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alons\Desktop\UPC\BubbleBobble\raylib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

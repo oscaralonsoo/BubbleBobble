@@ -9,7 +9,7 @@ Bubble::Bubble(int id, const Point& p, BubbleState s, Direction dir) :
 {
 	bubbleId = id;
 	state = s;
-	direction = dir;
+	direction = (int)dir;
 	map = nullptr;
 }
 Bubble::~Bubble()
@@ -63,10 +63,10 @@ void Bubble::Disable()
 	state = BubbleState::DISABLED;
 	SetAnimation((int)BubbleAnim::DISABLED);
 }
-void Bubble::StartLaunching(Point pos, Point dir)
+void Bubble::StartLaunching(Point pos, int dir)
 {
 	SetPos(pos);
-	SetDir(dir);
+	direction = dir;
 	state = BubbleState::LAUNCHING;
 	SetAnimation((int)BubbleAnim::LAUNCHING);
 }
@@ -98,8 +98,15 @@ void Bubble::HandleStates()
 
 void Bubble::LogicLaunching()
 {
-	dir.x = BUBBLE_SPEED;
-	pos.x += dir.x;
+	if (direction == (int)Direction::RIGHT)
+	{
+		pos.x += BUBBLE_SPEED;
+	}
+	else if (direction == (int)Direction::LEFT)
+	{
+		pos.x -= BUBBLE_SPEED;
+	}
+	
 	if (GetAnimation() == BubbleAnim::LAUNCHING || GetAnimation() == BubbleAnim::LAUNCHING)
 	{
 		Sprite* sprite = dynamic_cast<Sprite*>(render);
@@ -122,6 +129,13 @@ void Bubble::Release()
 	data.ReleaseTexture(Resource::IMG_BUBBLE);
 
 	render->Release();
+}
+
+void Bubble::DrawDebug(const Color& col) const
+{
+	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
+
+	DrawPixel(pos.x, pos.y, WHITE);
 }
 
 void Bubble::SetTileMap(TileMap* tilemap)

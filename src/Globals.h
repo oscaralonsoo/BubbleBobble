@@ -28,4 +28,4 @@ void log(const char file[], int line, const char* text, ...);
 #define ANIM_DELAY		4
 
 //Maximum of bubbles in game
-#define MAX_BUBBLES     20
+#define MAX_BUBBLES     40

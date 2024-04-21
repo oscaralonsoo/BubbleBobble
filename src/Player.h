@@ -34,6 +34,8 @@
 #define ANIM_JUMPING_DELAY		5
 #define ANIM_FALLING_DELAY		12
 #define ANIM_SHOOTING_DELAY		3
+#define ANIM_DEAD_DELAY			7
+
 
 //Logic states
 enum class PlayerState { IDLE, WALKING, JUMPING, FALLING, SHOOTING, DEAD };
@@ -46,6 +48,7 @@ enum class PlayerAnim {
 	JUMPING_LEFT, JUMPING_RIGHT,
 	FALLING_LEFT, FALLING_RIGHT,
 	SHOOTING_LEFT, SHOOTING_RIGHT,
+	DEAD_LEFT, DEAD_RIGHT,
 	NUM_ANIMATIONS
 };
 
@@ -61,11 +64,15 @@ public:
 	void InitScore();
 	void IncrScore(int n);
 	int GetScore();
+	void InitLifes();
+	void DecrLifes();
+	int GetLifes();
 
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
 
+	void StartDeath();
 private:
 	bool IsLookingRight() const;
 	bool IsLookingLeft() const;
@@ -76,6 +83,7 @@ private:
 	void Shoot();
 	void LogicJumping();
 	void LogicShooting();
+	void LogicDead();
 
 	//Animation management
 	void SetAnimation(int id);
@@ -100,6 +108,7 @@ private:
 	TileMap *map;
 
 	int score;
+	int lifes;
 	int current_bubble;
 
 	Sound bubbleSound;

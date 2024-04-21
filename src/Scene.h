@@ -31,7 +31,7 @@ private:
     void RenderGUI() const;
 
     Player* player;
-    Enemy* enemy;
+    std::vector<Enemy*> enemies;
     std::vector<Bubble*> bubbles;
     std::vector<Object*> objects;
     /*std::vector<Lifes*> lifes;*/

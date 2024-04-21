@@ -40,14 +40,32 @@ AppStatus Enemy::Initialise()
 	for (i = 0; i < 4; ++i)
 		sprite->AddKeyFrame((int)EnemyAnim::WALKING_RIGHT, { (float)i * n, 0, -n, n });
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_LEFT, ANIM_WALKING_DELAY);
-	for (i = 0; i < 7; ++i)
+	for (i = 0; i < 4; ++i)
 		sprite->AddKeyFrame((int)EnemyAnim::WALKING_LEFT, { (float)i * n, 0, n, n });
+
+	sprite->SetAnimationDelay((int)EnemyAnim::DEAD_RIGHT, ANIM_DEAD_DELAY);
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { 2*n, n, -n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { 3*n, n, -n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { 4*n, n, -n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { 5*n, n, -n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { 0,   2*n, -n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { n,   2*n, -n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_RIGHT, { 2*n, 2*n, -n, n });
+
+	sprite->SetAnimationDelay((int)EnemyAnim::DEAD_LEFT, ANIM_DEAD_DELAY);
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { 2*n, n, n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { 3*n, n, n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { 4*n, n, n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { 5*n, n, n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { 0,   2*n, n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { n,   2*n, n, n });
+	sprite->AddKeyFrame((int)EnemyAnim::DEAD_LEFT, { 2*n, 2*n, n, n });
 
 	sprite->SetAnimationDelay((int)EnemyAnim::IDLE_RIGHT, ANIM_IDLE_DELAY);
 	sprite->AddKeyFrame((int)EnemyAnim::IDLE_RIGHT, { 0, 0, -n, n });
 	sprite->SetAnimationDelay((int)EnemyAnim::IDLE_LEFT, ANIM_IDLE_DELAY);
 	sprite->AddKeyFrame((int)EnemyAnim::IDLE_LEFT, { 0, 0, n, n });
-	
+
 	return AppStatus::OK;
 }
 void Enemy::SetTileMap(TileMap* tilemap)
@@ -112,59 +130,60 @@ void Enemy::ChangeAnimLeft()
 void Enemy::Update()
 {
 	MoveX();
-
+	
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
 }
 void Enemy::MoveX()
 {
-	AABB box;
+	/*AABB box;
 	int prev_x = pos.x;
-
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT))
+	
+	box = GetHitbox();
+	if (map->TestCollisionWallRight(box))
 	{
-		pos.x += -ENEMY_SPEED;
-		if (state == EnemyState::IDLE) StartWalkingLeft();
-		else
-		{
-			if (IsLookingRight()) ChangeAnimLeft();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallLeft(box))
-		{
-			pos.x = prev_x;
-			if (state == EnemyState::WALKING) Stop();
-		}
-	}
-	else if (IsKeyDown(KEY_RIGHT))
+		pos.x = prev_x;
+	}*/
+	
+	//Provisional movement (CHANGE)
+	if (GetAnimation() != EnemyAnim::DEAD_LEFT && GetAnimation() != EnemyAnim::DEAD_RIGHT)
 	{
-		pos.x += ENEMY_SPEED;
-		if (state == EnemyState::IDLE) StartWalkingRight();
-		else
+		if (posTest == 0)
 		{
-			if (IsLookingLeft()) ChangeAnimRight();
+			posTest = GetPos().x;
 		}
 
-		box = GetHitbox();
-		if (map->TestCollisionWallRight(box))
+		if (GetPos().x > (posTest + LIMIT))
 		{
-			pos.x = prev_x;
-			if (state == EnemyState::WALKING) Stop();
+			dirTest = -1;
+			StartWalkingLeft();
 		}
+		else if (GetPos().x < (posTest - LIMIT))
+		{
+			dirTest = 1;
+			StartWalkingRight();
+		}
+		pos.x += ENEMY_SPEED * dirTest;
 	}
-	else
-	{
-		if (state == EnemyState::WALKING) Stop();
-	}
+	
 }
 void Enemy::DrawDebug(const Color& col) const
 {
 	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
 
-	DrawText(TextFormat("Position: (%d,%d)\nSize: %dx%d\nFrame: %dx%d", pos.x, pos.y, width, height, frame_width, frame_height), 18 * 16, 0, 8, LIGHTGRAY);
 	DrawPixel(pos.x, pos.y, WHITE);
 }
+
+void Enemy::StartDeath()
+{
+	if (GetAnimation() != EnemyAnim::DEAD_LEFT && GetAnimation() != EnemyAnim::DEAD_RIGHT)
+	{
+		state = EnemyState::DEAD;
+		if (IsLookingRight())	SetAnimation((int)EnemyAnim::DEAD_RIGHT);
+		else					SetAnimation((int)EnemyAnim::DEAD_LEFT);
+	}
+}
+
 void Enemy::Release()
 {
 	ResourceManager& data = ResourceManager::Instance();
