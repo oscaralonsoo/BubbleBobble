@@ -5,10 +5,11 @@
 
 Game::Game()
 {
-    state = GameState::MAIN_MENU;
+    state = GameState::MAIN_TITLE;
     scene = nullptr;
     img_menu = nullptr;
- 
+    img_title = nullptr;
+
 
     target = {};
     src = {};
@@ -65,6 +66,14 @@ AppStatus Game::Initialise(float scale)
 AppStatus Game::LoadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
+
+    if (data.LoadTexture(Resource::IMG_TITLE, "images/titlescreen.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_title = data.GetTexture(Resource::IMG_TITLE);
+
+    return AppStatus::OK;
     
     if (data.LoadTexture(Resource::IMG_MENU, "images/menu.png") != AppStatus::OK)
     {
@@ -73,6 +82,7 @@ AppStatus Game::LoadResources()
     img_menu = data.GetTexture(Resource::IMG_MENU);
     
     return AppStatus::OK;
+
 }
 AppStatus Game::BeginPlay()
 {
@@ -103,6 +113,15 @@ AppStatus Game::Update()
 
     switch (state)
     {
+
+        case GameState::MAIN_TITLE:
+            if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+            if (IsKeyPressed(KEY_X))
+             {
+                 state = GameState::MAIN_MENU;
+             }
+            break;
+
         case GameState::MAIN_MENU: 
             if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
             if (IsKeyPressed(KEY_SPACE))
@@ -135,6 +154,10 @@ void Game::Render()
     
     switch (state)
     {
+    case GameState::MAIN_TITLE:
+        DrawTexture(*img_title, 0, 0, WHITE);
+        break;
+
         case GameState::MAIN_MENU:
             DrawTexture(*img_menu, 0, 0, WHITE);
             break;
@@ -160,6 +183,7 @@ void Game::Cleanup()
 void Game::UnloadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
+    data.ReleaseTexture(Resource::IMG_TITLE);
     data.ReleaseTexture(Resource::IMG_MENU);
 
     UnloadRenderTexture(target);

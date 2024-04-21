@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "Scene.h"
 
-enum class GameState { MAIN_MENU, PLAYING, SETTINGS, CREDITS };
+enum class GameState { MAIN_TITLE, MAIN_MENU, PLAYING, SETTINGS, CREDITS };
 
 class Game
 {
@@ -22,9 +22,12 @@ private:
     AppStatus LoadResources();
     void UnloadResources();
 
+
+
     GameState state;
     Scene *scene;
     const Texture2D *img_menu;
+    const Texture2D *img_title;
 
     //To work with original game units and then scale the result
     RenderTexture2D target;
