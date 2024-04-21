@@ -75,6 +75,9 @@ AppStatus Player::Initialise()
 	sprite->AddKeyFrame((int)PlayerAnim::JUMPING_LEFT, { 0, 3*n, n, n });
 	sprite->AddKeyFrame((int)PlayerAnim::JUMPING_LEFT, { n, 3*n, n, n });
 
+	bubbleSound = LoadSound("Sprites/SFX/soundbubble.wav");
+	bubbleJump = LoadSound("Sprites/SFX/soundjump.wav");
+
 	return AppStatus::OK;
 }
 void Player::InitScore()
@@ -147,16 +150,22 @@ void Player::StartFalling()
 }
 void Player::StartJumping()
 {
+
 	dir.y = -PLAYER_JUMP_FORCE;
 	state = PlayerState::JUMPING;
 	if (IsLookingRight())	SetAnimation((int)PlayerAnim::JUMPING_RIGHT);
 	else					SetAnimation((int)PlayerAnim::JUMPING_LEFT);
 	jump_delay = PLAYER_JUMP_DELAY;	
+	
+	PlaySound(bubbleJump);
+
 }
 void Player::StartShooting()
 {
 	if (IsLookingRight())	SetAnimation((int)PlayerAnim::SHOOTING_RIGHT);
 	else					SetAnimation((int)PlayerAnim::SHOOTING_LEFT);
+
+	PlaySound(bubbleSound);
 }
 void Player::ChangeAnimRight()
 {

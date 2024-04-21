@@ -63,6 +63,7 @@
     <ClInclude Include="src\Bubble.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="src\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Globals.cpp">
@@ -107,5 +108,6 @@
     <ClCompile Include="src\Bubble.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\Enemy.cpp" />
   </ItemGroup>
 </Project>

@@ -101,5 +101,8 @@ private:
 
 	int score;
 	int current_bubble;
+
+	Sound bubbleSound;
+	Sound bubbleJump;
 };
 
