@@ -50,13 +50,20 @@ bool ZenChan::Update(const AABB& box)
 	bool shoot = false;
 	int direction = (look == Look::RIGHT) ? 1 : -1;
 
+	OutOfScreen();
+
 	if (map->TestCollisionWallRight(GetHitbox()))
 	{
 		StartWalkingLeft();
+		pos.x -= 7 * direction;
+		map->TestCollisionGround(GetHitbox(), &pos.y);
 	}
 	if (map->TestCollisionWallLeft(GetHitbox()))
 	{
 		StartWalkingRight();
+		pos.x -= 7 * direction;
+		map->TestCollisionGround(GetHitbox(), &pos.y);
+
 	}
 
 	if (state == ZenChanState::ROAMING)
@@ -67,13 +74,11 @@ bool ZenChan::Update(const AABB& box)
 		{
 			if (GetRandomValue(0, 1))
 			{
-				TraceLog(LOG_INFO, "salta");
 				state = ZenChanState::JUMPING;
 			}
 			else
 			{
-				TraceLog(LOG_INFO, "salta");
-				state = ZenChanState::JUMPING;
+				state = ZenChanState::FALLING;
 			}
 		}
 	}
@@ -91,13 +96,21 @@ bool ZenChan::Update(const AABB& box)
 	{
 		if (map->TestFalling(GetHitbox()))
 		{
-			pos += {ZENCHAN_SPEED * direction, 0};
+			if (current_pos < ZENCHAN_JUMP_HEIGHT)
+			{
+				pos += {3 * direction, -ZENCHAN_JUMP_SPEED};
+				current_pos += ZENCHAN_JUMP_SPEED;
+			}
+			else
+			{
+				pos += {3 * direction, ZENCHAN_JUMP_SPEED};
+			}
 		}
 		else
 		{
+			current_pos = 0;
 			state = ZenChanState::ROAMING;
 		}
-
 	}
 
 	sprite->Update();
