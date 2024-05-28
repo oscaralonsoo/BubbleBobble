@@ -18,17 +18,20 @@ enum class Tile {
 	BLOCK_WALL_L = 2, BLOCK_WALL_R = 3, BLOCK_SQUARE1_R = 4, BLOCK_SQUARE1_B = 5, BLOCK_SQUARE1_BL = 6,
 	BLOCK_SQUARE1_BR = 7, BLOCK_SQUARE1_TR = 8, BLOCK_CORNER = 9,
 
+	// 50 <= id < 100: special tiles
+	ITEM_APPLE = 50, ITEM_CHILI,
+
 	// id >= 100: entities' initial locations
 	PLAYER = 100,
-	ENEMY = 101,
+	ZENCHAN = 101,
 
 	//Intervals
-	STATIC_FIRST = BLOCK_SQUARE1,
-	STATIC_LAST = BLOCK_CORNER,
 	SOLID_FIRST = BLOCK_SQUARE1,
 	SOLID_LAST = BLOCK_WALL_R,
+	OBJECT_FIRST = ITEM_APPLE,
+	OBJECT_LAST = ITEM_CHILI,
 	ENTITY_FIRST = PLAYER,
-	ENTITY_LAST = ENEMY
+	ENTITY_LAST = ZENCHAN
 };
 
 class TileMap
@@ -39,9 +42,14 @@ public:
 
 	AppStatus Initialise();
 	AppStatus Load(int data[], int w, int h);
+	void ClearObjectEntityPositions();
+
 	void Update();
 	void Render();
 	void Release();
+
+	bool IsTileObject(Tile tile) const;
+	bool IsTileEntity(Tile tile) const;
 
 	//Test for collisions with walls
 	bool TestCollisionWallLeft(const AABB& box) const;
@@ -54,6 +62,12 @@ public:
 	
 	//Test if there is a ground tile one pixel below the given box
 	bool TestFalling(const AABB& box) const;
+
+	//Test if there is a ground tile one pixel below the given box before falling
+	bool TestBeforeFalling(const AABB& box) const;
+
+	//Given a hitbox, computes the maximum swept box model along the X-axis without solid tiles
+	AABB GetSweptAreaX(const AABB& hitboxbox) const;
 
 private:
 	void InitTileDictionary();

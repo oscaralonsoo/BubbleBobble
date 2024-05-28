@@ -6,8 +6,8 @@ Scene::Scene()
 {
 	player = nullptr;
 	bubbles.clear();
-    level = nullptr;
-	enemies.clear();
+	level = nullptr;
+	enemies = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
@@ -32,13 +32,11 @@ Scene::~Scene()
 		}
 		bubbles.clear();
 	}
-	if (!enemies.empty())
+	if (enemies != nullptr)
 	{
-		for (Enemy* enemy : enemies) {
-			enemy->Release();
-			delete enemy;
-		}
-		enemies.clear();
+		enemies->Release();
+		delete enemies;
+		enemies = nullptr;
 	}
     if (level != nullptr)
     {
@@ -87,6 +85,20 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 
+	//Create enemy manager
+	enemies = new EnemyManager();
+	if (enemies == nullptr)
+	{
+		LOG("Failed to allocate memory for Enemy Manager");
+		return AppStatus::ERROR;
+	}
+	//Initialise enemy manager
+	if (enemies->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Enemy Manager");
+		return AppStatus::ERROR;
+	}
+
 	//Create lifes
 	/*for (int i = 0; i < MAX_BUBBLES; i++)
 	{
@@ -128,9 +140,11 @@ AppStatus Scene::Init()
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
 
-	for (Enemy* enemy : enemies) {
-		enemy->SetTileMap(level);
-	}
+	//Assign the tile map reference to the enemies to check collisions while rooming
+	enemies->SetTileMap(level);
+
+	//Assign the tile map reference to the shot manager to check collisions when shots are shot
+	//shots->SetTileMap(level);
 
 	for (Bubble* bubble : bubbles) {
 		bubble->SetTileMap(level);
@@ -147,7 +161,7 @@ AppStatus Scene::LoadLevel(int stage)
 	Point pos;
 	int *map = nullptr;
 	Object* obj;
-	Enemy* enemy;
+	AABB hitbox, area;
 	
 	ClearLevel();
 
@@ -159,12 +173,12 @@ AppStatus Scene::LoadLevel(int stage)
 			 2,   3,   9,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   6,   5,   5,   5,   5,   5,   7,   0,   0,   0,   6,   5,   5,   5,   5,   5,   5,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
-			 2,   3,   4,   0,   0,   0,   0,   0,   101, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101, 0,   0,   0,   0,   0,   0,   0,   2,   3,
+			 2,   3,   4,   0,   0,   0,   0,   0,   102, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   102, 0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   9,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   0,   0,   5,   5,   5,   5,   5,   5,   5,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
-			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   101, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101, 0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
+			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   101, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   102, 0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   9,   5,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   5,   5,   5,   5,   5,   5,   5,   5,   1,   4,   0,   0,   2,   3,
 			 2,   3,   4,   0,   0,   1,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   4,   0,   0,   2,   3,
@@ -214,6 +228,9 @@ AppStatus Scene::LoadLevel(int stage)
 		return AppStatus::ERROR;	
 	}
 
+	//Tile map
+	level->Load(map, LEVEL_WIDTH, LEVEL_HEIGHT);
+
 	//Entities and objects
 	i = 0;
 	for (y = 0; y < LEVEL_HEIGHT; ++y)
@@ -221,48 +238,63 @@ AppStatus Scene::LoadLevel(int stage)
 		for (x = 0; x < LEVEL_WIDTH; ++x)
 		{
 			tile = (Tile)map[i];
-			if (tile == Tile::EMPTY)
-			{
-				map[i] = 0;
-			}
-			else if (tile == Tile::PLAYER)
+			if (level->IsTileEntity(tile) || level->IsTileObject(tile))
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				player->SetPos(pos);
-				map[i] = 0;
-			}
-			else if (tile == Tile::ENEMY)
-			{
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				enemy = new Enemy(PLAYER_SPAWN, EnemyState::IDLE, EnemyLook::RIGHT);
-				if (enemy == nullptr)
+
+				if (tile == Tile::PLAYER)
 				{
-					LOG("Failed to allocate memory for Enemy");
-					return AppStatus::ERROR;
+					player->SetPos(pos);
 				}
-				if (enemy->Initialise() != AppStatus::OK)
+				/*else if (tile == Tile::ITEM_APPLE)
 				{
-					LOG("Failed to initialise Enemy");
-					return AppStatus::ERROR;
+					obj = new Object(pos, ObjectType::APPLE);
+					objects.push_back(obj);
 				}
-				enemies.push_back(enemy);
-				enemy->SetPos(pos);
-				map[i] = 0;
+				else if (tile == Tile::ITEM_CHILI)
+				{
+					obj = new Object(pos, ObjectType::CHILI);
+					objects.push_back(obj);
+				}*/
+				else if (tile == Tile::ZENCHAN)
+				{
+					pos.x += (ZENCHAN_FRAME_SIZE - ZENCHAN_PHYSICAL_WIDTH) / 2;
+					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZENCHAN);
+					area = level->GetSweptAreaX(hitbox);
+					enemies->Add(pos, EnemyType::ZENCHAN, area);
+
+				}
+				/*else if (tile == Tile::TURRET_LEFT)
+				{
+					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::TURRET);
+					area = level->GetSweptAreaX(hitbox);
+					enemies->Add(pos, EnemyType::TURRET, area, Look::LEFT);
+				}
+				else if (tile == Tile::TURRET_RIGHT)
+				{
+					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::TURRET);
+					area = level->GetSweptAreaX(hitbox);
+					enemies->Add(pos, EnemyType::TURRET, area, Look::RIGHT);
+				}*/
+				else
+				{
+					LOG("Internal error loading scene: invalid entity or object tile id")
+				}
 			}
 			++i;
 		}
 	}
-	//Tile map
-	level->Load(map, LEVEL_WIDTH, LEVEL_HEIGHT);
+	//Remove initial positions of objects and entities from the map
+	level->ClearObjectEntityPositions();
 
+	delete[] map;
 	return AppStatus::OK;
 }
 void Scene::Update()
 {
 	Point p1, p2;
-	AABB box;
+	AABB hitbox;
 
 	//Switch between the different debug modes: off, on (sprites & hitboxes), on (hitboxes) 
 	if (IsKeyPressed(KEY_F1))
@@ -275,13 +307,13 @@ void Scene::Update()
 
 	level->Update();
 	player->Update();
-	for (Enemy* enemy : enemies) {
-		enemy->Update();
-	}
+	CheckObjectCollisions();
+
+	hitbox = player->GetHitbox();
+	enemies->Update(hitbox);
 	for (Bubble* bubble : bubbles) {
 		bubble->Update();
 	}
-	CheckCollisions();
 }
 void Scene::Render()
 {
@@ -291,6 +323,7 @@ void Scene::Render()
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
 	{
 		RenderObjects(); 
+		enemies->Draw();
 		player->Draw();
 		for (Bubble* bubble : bubbles) {
 			bubble->Draw();
@@ -300,9 +333,7 @@ void Scene::Render()
 	{
 		RenderObjectsDebug(YELLOW);
 		player->DrawDebug(GREEN);
-		for (Enemy* enemy : enemies) {
-			enemy->DrawDebug(RED);
-		}
+		enemies->DrawDebug();
 		for (Bubble* bubble : bubbles) {
 			bubble->DrawDebug(BLUE);
 		}
@@ -316,35 +347,34 @@ void Scene::Release()
 {
     level->Release();
 	player->Release();
-	for (Enemy* enemy : enemies) {
-		enemy->Release();
-	}
+
 	for (Bubble* bubble : bubbles) {
 		bubble->Release();
 	}
 	ClearLevel();
 }
-void Scene::CheckCollisions()
+void Scene::CheckObjectCollisions()
 {
-	AABB player_box, enemy_box, bubble_box;
-	
+	AABB player_box, obj_box;
+
 	player_box = player->GetHitbox();
-	for (auto i = enemies.begin(); i != enemies.end(); ++i)
+	auto it = objects.begin();
+	while (it != objects.end())
 	{
-		enemy_box = (*i)->GetHitbox();
-		if (player_box.TestAABB(enemy_box))
+		obj_box = (*it)->GetHitbox();
+		if (player_box.TestAABB(obj_box))
 		{
-			player->StartDeath();
+			player->IncrScore((*it)->Points());
+
+			//Delete the object
+			delete* it;
+			//Erase the object from the vector and get the iterator to the next valid element
+			it = objects.erase(it);
 		}
-
-		for (auto j = bubbles.begin(); j != bubbles.end(); ++j)
+		else
 		{
-			bubble_box = (*j)->GetHitbox();
-			if (bubble_box.TestAABB(enemy_box))
-			{
-				(*i)->StartDeath();
-
-			}
+			//Move to the next object
+			++it;
 		}
 	}
 }
@@ -356,11 +386,7 @@ void Scene::ClearLevel()
 	}
 	objects.clear();
 
-	for (Enemy* enemy : enemies)
-	{
-		delete enemy;
-	}
-	enemies.clear();
+	enemies->Release();
 }
 void Scene::RenderObjects() const
 {
@@ -368,20 +394,12 @@ void Scene::RenderObjects() const
 	{
 		obj->Draw();
 	}
-	for (Enemy* enemy : enemies)
-	{
-		enemy->Draw();
-	}
 }
 void Scene::RenderObjectsDebug(const Color& col) const
 {
 	for (Object* obj : objects)
 	{
 		obj->DrawDebug(col);
-	}
-	for (Enemy* enemy : enemies)
-	{
-		enemy->DrawDebug(col);
 	}
 }
 void Scene::RenderGUI() const

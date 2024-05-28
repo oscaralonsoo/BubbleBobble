@@ -26,7 +26,8 @@ public:
 
     void SetManualMode();
     void SetAutomaticMode();
-    
+    bool IsAnimationComplete() const;
+
     void Update();
     void NextFrame();
     void PrevFrame();
@@ -45,5 +46,9 @@ private:
     std::vector<Animation> animations;
 
     AnimMode mode;
+
+    //Animation is complete when animation mode is automatic and we have processed all the
+    //frames of the current animation, that is, when we repeat from the first frame
+    bool animation_complete;
 };
 

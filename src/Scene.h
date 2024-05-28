@@ -4,8 +4,8 @@
 #include "Bubble.h"
 #include "TileMap.h"
 #include "Lifes.h"
+#include "EnemyManager.h"
 #include "Object.h"
-#include "Enemy.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
@@ -24,15 +24,17 @@ public:
 
 private:
     AppStatus LoadLevel(int stage);
-    
-    void CheckCollisions(); 
+
+    void CheckObjectCollisions();
     void ClearLevel();
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;
 
     void RenderGUI() const;
 
-    std::vector<Enemy*> enemies;
+    //Enemies present in the level
+    EnemyManager* enemies;
+
     std::vector<Bubble*> bubbles;
     std::vector<Object*> objects;
     /*std::vector<Lifes*> lifes;*/

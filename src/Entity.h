@@ -6,19 +6,26 @@
 #include "RenderComponent.h"
 #include "AABB.h"
 
+enum class Look { RIGHT, LEFT };
+
 class Entity
 {
 public:
+	Entity();
 	Entity(const Point& p, int width, int height);
 	Entity(const Point& p, int width, int height, int frame_width, int frame_height);
 	virtual ~Entity();
 
+	void Set(const Point& p, const Point& d, int w, int h, int framew, int frameh);
 	void SetPos(const Point& p);
 	Point GetPos();
 	void SetDir(const Point& d);
 	Point GetDir();
 	void Update();
 	AABB GetHitbox() const;
+
+	void SetAlive(bool b);
+	bool IsAlive() const;
 
 	//Draw representation model
 	void Draw() const;
@@ -39,4 +46,8 @@ protected:
 	int frame_width, frame_height;
 
 	RenderComponent *render;
+
+	//Flag to mark wether an entity is active or inactive. Trick to manage dynamic arrays of
+	//entities with static arrays without new/delete operations
+	bool alive;
 };

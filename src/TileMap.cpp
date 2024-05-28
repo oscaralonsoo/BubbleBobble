@@ -64,6 +64,17 @@ AppStatus TileMap::Load(int data[], int w, int h)
 
 	return AppStatus::OK;
 }
+void TileMap::ClearObjectEntityPositions()
+{
+	int i;
+	Tile tile;
+	for (i = 0; i < size; ++i)
+	{
+		tile = map[i];
+		if (IsTileEntity(tile) || IsTileObject(tile) || tile == Tile::EMPTY)
+			map[i] = Tile::AIR;
+	}
+}
 void TileMap::Update()
 {
 }
@@ -77,9 +88,17 @@ Tile TileMap::GetTileIndex(int x, int y) const
 	}
 	return map[x + y * width];
 }
+bool TileMap::IsTileObject(Tile tile) const
+{
+	return Tile::OBJECT_FIRST <= tile && tile <= Tile::OBJECT_LAST;
+}
+bool TileMap::IsTileEntity(Tile tile) const
+{
+	return Tile::ENTITY_FIRST <= tile && tile <= Tile::ENTITY_LAST;
+}
 bool TileMap::IsTileSolid(Tile tile) const
 {
-	return (Tile::SOLID_FIRST <= tile && tile <= Tile::SOLID_LAST);
+	return Tile::SOLID_FIRST <= tile && tile <= Tile::SOLID_LAST;
 }
 bool TileMap::TestCollisionWallLeft(const AABB& box) const
 {
@@ -89,7 +108,7 @@ bool TileMap::TestCollisionWallRight(const AABB& box) const
 {
 	return CollisionX(box.pos + Point(box.width - 1, 0), box.height);
 }
-bool TileMap::TestCollisionGround(const AABB& box, int *py) const
+bool TileMap::TestCollisionGround(const AABB& box, int* py) const
 {
 	Point p(box.pos.x, *py);	//control point
 	int tile_y;
@@ -106,6 +125,10 @@ bool TileMap::TestCollisionGround(const AABB& box, int *py) const
 bool TileMap::TestFalling(const AABB& box) const
 {
 	return !CollisionY(box.pos + Point(0, box.height), box.width);
+}
+bool TileMap::TestBeforeFalling(const AABB& box) const
+{
+	return !CollisionY(box.pos + Point(box.width, box.height), box.width);
 }
 bool TileMap::CollisionX(const Point& p, int distance) const
 {
@@ -144,6 +167,60 @@ bool TileMap::CollisionY(const Point& p, int distance) const
 			return true;
 	}
 	return false;
+}
+
+AABB TileMap::GetSweptAreaX(const AABB& hitbox) const
+{
+	AABB box;
+	int column, x, y, y0, y1;
+	bool collision;
+
+	box.pos.y = hitbox.pos.y;
+	box.height = hitbox.height;
+
+	column = hitbox.pos.x / TILE_SIZE;
+	y0 = hitbox.pos.y / TILE_SIZE;
+	y1 = (hitbox.pos.y + hitbox.height - 1) / TILE_SIZE;
+
+	//Compute left tile index
+	collision = false;
+	x = column - 1;
+	while (!collision && x >= 0)
+	{
+		//Iterate over the tiles within the vertical range
+		for (y = y0; y <= y1; ++y)
+		{
+			//One solid tile is sufficient
+			if (IsTileSolid(GetTileIndex(x, y)))
+			{
+				collision = true;
+				break;
+			}
+		}
+		if (!collision) x--;
+	}
+	box.pos.x = (x + 1) * TILE_SIZE;
+
+	//Compute right tile index
+	collision = false;
+	x = column + 1;
+	while (!collision && x < LEVEL_WIDTH)
+	{
+		//Iterate over the tiles within the vertical range
+		for (y = y0; y <= y1; ++y)
+		{
+			//One solid tile is sufficient
+			if (IsTileSolid(GetTileIndex(x, y)))
+			{
+				collision = true;
+				break;
+			}
+		}
+		if (!collision) x++;
+	}
+	box.width = x * TILE_SIZE - box.pos.x;
+
+	return box;
 }
 
 void TileMap::Render()

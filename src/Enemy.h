@@ -3,75 +3,49 @@
 #include "TileMap.h"
 
 //Representation model size: 48x48
-#define ENEMY_FRAME_SIZE		48
+#define ZENCHAN_FRAME_SIZE		48
+//Logical model size: 24x30
+#define ZENCHAN_PHYSICAL_WIDTH	24
+#define ZENCHAN_PHYSICAL_HEIGHT	30
 
-//Logical model size: 12x28
-#define ENEMY_PHYSICAL_WIDTH	35
-#define ENEMY_PHYSICAL_HEIGHT	35
+//Representation model size: 32x32
+#define TURRET_FRAME_SIZE		32
+//Logical model size: 0x0
+#define TURRET_PHYSICAL_WIDTH	32
+#define TURRET_PHYSICAL_HEIGHT	26
 
-//Horizontal speed and vertical speed while falling down
-#define ENEMY_SPEED			    2
-
-//Player spawn position 
-#define ENEMY_SPAWN			{75, 595}
-
-//Player animations delay
-#define ANIM_IDLE_DELAY			18
-#define ANIM_WALKING_DELAY		8
-#define ANIM_DEAD_DELAY			8
-
-//Provisional movement (CHANGE)
-#define LIMIT					50
-
-
-//Logic states
-enum class EnemyState { IDLE, WALKING, DEAD };
-enum class EnemyLook { RIGHT, LEFT };
-
-//Rendering states
-enum class EnemyAnim {
-	IDLE_LEFT, IDLE_RIGHT,
-	WALKING_LEFT, WALKING_RIGHT,
-	DEAD_LEFT, DEAD_RIGHT,
-	NUM_ANIMATIONS
-};
+enum class EnemyType { ZENCHAN, TURRET };
 
 class Enemy : public Entity
 {
 public:
-	Enemy(const Point& p, EnemyState s, EnemyLook view);
-	~Enemy();
+	Enemy(const Point& p, int width, int height, int frame_width, int frame_height);
+	virtual ~Enemy();
 
-	AppStatus Initialise();
+	//Draw the maximum visibility area of the enemy
+	void DrawVisibilityArea(const Color& col) const;
+
+	//Pure virtual functions, any class inheriting from this class must provide its own implementations
+
+	//Initialize the enemy with the specified look and area
+	virtual AppStatus Initialise(Look look, const AABB& area) = 0;
+
+	//Set the TileMap reference for managing enemy collisions
 	void SetTileMap(TileMap* tilemap);
 
-	void Update();
-	void DrawDebug(const Color& col) const;
-	void Release();
-	void StartDeath();
+	//Update the enemy according to its logic, return true if the enemy must shoot
+	virtual bool Update(const AABB& box) = 0;
 
-private:
-	bool IsLookingRight() const;
-	bool IsLookingLeft() const;
+	//Retrieve the position and direction of the shot to be thrown
+	virtual void GetShootingPosDir(Point* pos, Point* dir) const = 0;
 
-	//Player mechanics
-	void MoveX();
+protected:
+	//Return true if the given hitbox is within the visibility area and the enemy is facing it
+	bool IsVisible(const AABB& hitbox);
 
-	//Animation management
-	void SetAnimation(int id);
-	EnemyAnim GetAnimation();
-	void Stop();
-	void StartWalkingLeft();
-	void StartWalkingRight();
-	void ChangeAnimRight();
-	void ChangeAnimLeft();
+	Look look;
+	AABB visibility_area;
 
-	EnemyState state;
-	EnemyLook look;
 	TileMap* map;
-
-	//Provisional movement (CHANGE)
-	int dirTest = 1;
-	int posTest = 0;
 };
 
