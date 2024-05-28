@@ -120,8 +120,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\alons\Documents\GitHub\BubbleBobble\raylib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alons\Documents\GitHub\BubbleBobble\raylib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\oscarac8\Desktop\BubbleBobble\raylib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\oscarac8\Desktop\BubbleBobble\raylib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -8,6 +8,7 @@ ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int fra
 
 	current_step = 0;
 	current_frames = 0;
+	current_pos = 0;
 }
 ZenChan::~ZenChan()
 {
@@ -41,67 +42,97 @@ AppStatus ZenChan::Initialise(Look look, const AABB& area)
 
 	visibility_area = area;
 
-	InitPattern();
-
 	return AppStatus::OK;
-}
-void ZenChan::InitPattern()
-{
-	//Multiplying by 3 ensures sufficient time for displaying all 3 frames of the
-	//walking animation, resulting in smoother transitions and preventing the animation
-	//from appearing rushed or incomplete
-	const int n = ZENCHAN_ANIM_DELAY * 3;
-	
-	pattern.push_back({ {0, 0}, 2 * n, (int)ZenChanAnim::WALKING_RIGHT });
-	pattern.push_back({ {ZENCHAN_SPEED, 0}, n, (int)ZenChanAnim::WALKING_RIGHT });
-	pattern.push_back({ {0, 0}, n, (int)ZenChanAnim::WALKING_RIGHT });
-	pattern.push_back({ {ZENCHAN_SPEED, 0}, n, (int)ZenChanAnim::WALKING_RIGHT });
-	pattern.push_back({ {0, 0}, n, (int)ZenChanAnim::WALKING_RIGHT });
-
-	pattern.push_back({ {0, 0}, 2 * n, (int)ZenChanAnim::WALKING_LEFT });
-	pattern.push_back({ {-ZENCHAN_SPEED, 0}, n, (int)ZenChanAnim::WALKING_LEFT });
-	pattern.push_back({ {0, 0}, n, (int)ZenChanAnim::WALKING_LEFT });
-	pattern.push_back({ {-ZENCHAN_SPEED, 0}, n, (int)ZenChanAnim::WALKING_LEFT });
-	pattern.push_back({ {0, 0}, n, (int)ZenChanAnim::WALKING_LEFT });
-
-	current_step = 0;
-	current_frames = 0;
 }
 bool ZenChan::Update(const AABB& box)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	bool shoot = false;
-	int anim_id;
+
+	if (look == Look::RIGHT)
+	{
+		pos += {ZENCHAN_SPEED, 0};
+	}
+	else if (look == Look::LEFT) {
+		pos += {-ZENCHAN_SPEED, 0};
+	}
 
 	if (state == ZenChanState::ROAMING)
 	{
-		TraceLog(LOG_INFO, "%s", (map->TestBeforeFalling(GetHitbox()) ? "true" : "false"));
-		pos += pattern[current_step].speed;
-		current_frames++;
-
-		if (current_frames == pattern[current_step].frames)
-		{
-			current_step++;
-			current_step %= pattern.size();
-			current_frames = 0;
-
-			anim_id = pattern[current_step].anim;
-			sprite->SetAnimation(anim_id);
-			UpdateLook(anim_id);
-		}
 		
+		if (map->TestBeforeFalling(GetHitbox()))
+		{
+			if (GetRandomValue(0, 1))
+			{
+				state = ZenChanState::JUMPING;
+			}
+			else
+			{
+				state = ZenChanState::JUMPING;
+			}
+		}
+
+		if (map->TestCollisionWallRight(GetHitbox()))
+		{
+			StartWalkingLeft();
+		}
+		if (map->TestCollisionWallLeft(GetHitbox()))
+		{
+			StartWalkingRight();
+		}
+	}
+	else if (state == ZenChanState::JUMPING)
+	{
+		if (map->TestBeforeFalling(GetHitbox()))
+		{
+			if (current_pos < ZENCHAN_JUMP_HEIGHT)
+			{
+				pos += {0, -3};
+				current_pos += 3;
+			}
+			else
+			{
+				pos += {0, 3};
+			}
+		}
+		else
+		{
+			current_pos = 0;
+			state = ZenChanState::ROAMING;
+		}
+	}
+	else if (state == ZenChanState::FALLING)
+	{
+		if (map->TestFalling(GetHitbox()))
+		{
+			pos += {0, 3};
+		}
+		else {
+			state = ZenChanState::ROAMING;
+		}
 	}
 
 	sprite->Update();
 
 	return shoot;
 }
-void ZenChan::UpdateLook(int anim_id)
+void ZenChan::SetAnimation(int id)
 {
-	ZenChanAnim anim = (ZenChanAnim)anim_id;
-	look = (anim == ZenChanAnim::WALKING_LEFT) ? Look::LEFT : Look::RIGHT;
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetAnimation(id);
 }
-
+void ZenChan::StartWalkingLeft()
+{
+	state = ZenChanState::ROAMING;
+	look = Look::LEFT;
+	SetAnimation((int)ZenChanAnim::WALKING_LEFT);
+}
+void ZenChan::StartWalkingRight()
+{
+	state = ZenChanState::ROAMING;
+	look = Look::RIGHT;
+	SetAnimation((int)ZenChanAnim::WALKING_RIGHT);
+}
 void ZenChan::GetShootingPosDir(Point* p, Point* d) const
 {
 	

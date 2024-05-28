@@ -4,8 +4,9 @@
 
 #define ZENCHAN_SPEED			3
 #define ZENCHAN_ANIM_DELAY	(4*ANIM_DELAY)
+#define ZENCHAN_JUMP_HEIGHT     50
 
-enum class ZenChanState { ROAMING };
+enum class ZenChanState { ROAMING, JUMPING, FALLING };
 enum class ZenChanAnim {
 	WALKING_LEFT, WALKING_RIGHT,
 	NUM_ANIMATIONS
@@ -34,16 +35,15 @@ public:
 	void GetShootingPosDir(Point* pos, Point* dir) const override;
 
 private:
-	//Create the pattern behaviour
-	void InitPattern();
-
-	//Update looking direction according to the current step of the pattern
-	void UpdateLook(int anim_id);
+	//Animation management
+	void SetAnimation(int id);
+	void StartWalkingLeft();
+	void StartWalkingRight();
 
 	ZenChanState state;
 
 	int current_step;	//current step of the pattern
 	int current_frames;	//number of frames in the current step
-	std::vector<Step> pattern;
+	int current_pos;	//current pos before jump
 };
 
