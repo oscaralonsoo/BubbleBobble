@@ -27,6 +27,9 @@ public:
 	void SetAlive(bool b);
 	bool IsAlive() const;
 
+	//Check if model is out of the screen
+	void OutOfScreen();
+
 	//Draw representation model
 	void Draw() const;
 	void DrawTint(const Color& col) const;

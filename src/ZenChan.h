@@ -4,7 +4,8 @@
 
 #define ZENCHAN_SPEED			3
 #define ZENCHAN_ANIM_DELAY	(4*ANIM_DELAY)
-#define ZENCHAN_JUMP_HEIGHT     50
+#define ZENCHAN_JUMP_HEIGHT     60
+#define ZENCHAN_JUMP_SPEED      2
 
 enum class ZenChanState { ROAMING, JUMPING, FALLING };
 enum class ZenChanAnim {

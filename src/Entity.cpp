@@ -54,13 +54,19 @@ void Entity::Set(const Point& p, const Point& d, int w, int h, int framew, int f
 }
 void Entity::Update()
 {
-	pos += dir;
 }
 AABB Entity::GetHitbox() const
 {
 	Point p(pos.x, pos.y - (height - 1));
 	AABB hitbox(p, width, height);
 	return hitbox;
+}
+void Entity::OutOfScreen()
+{
+	if (pos.y > 650)
+	{
+		SetPos({GetPos().x, -20});
+	}
 }
 void Entity::SetAlive(bool b)
 {

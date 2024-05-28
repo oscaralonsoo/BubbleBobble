@@ -126,9 +126,9 @@ bool TileMap::TestFalling(const AABB& box) const
 {
 	return !CollisionY(box.pos + Point(0, box.height), box.width);
 }
-bool TileMap::TestBeforeFalling(const AABB& box) const
+bool TileMap::TestBeforeFalling(const AABB& box, int dir) const
 {
-	return !CollisionY(box.pos + Point(box.width, box.height), box.width);
+	return !CollisionY(box.pos + Point(box.width * dir, box.height), box.width);
 }
 bool TileMap::CollisionX(const Point& p, int distance) const
 {

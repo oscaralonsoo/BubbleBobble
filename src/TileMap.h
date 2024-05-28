@@ -64,7 +64,7 @@ public:
 	bool TestFalling(const AABB& box) const;
 
 	//Test if there is a ground tile one pixel below the given box before falling
-	bool TestBeforeFalling(const AABB& box) const;
+	bool TestBeforeFalling(const AABB& box, int dir) const;
 
 	//Given a hitbox, computes the maximum swept box model along the X-axis without solid tiles
 	AABB GetSweptAreaX(const AABB& hitboxbox) const;

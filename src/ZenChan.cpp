@@ -48,68 +48,56 @@ bool ZenChan::Update(const AABB& box)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	bool shoot = false;
+	int direction = (look == Look::RIGHT) ? 1 : -1;
 
-	if (look == Look::RIGHT)
+	if (map->TestCollisionWallRight(GetHitbox()))
 	{
-		pos += {ZENCHAN_SPEED, 0};
+		StartWalkingLeft();
 	}
-	else if (look == Look::LEFT) {
-		pos += {-ZENCHAN_SPEED, 0};
+	if (map->TestCollisionWallLeft(GetHitbox()))
+	{
+		StartWalkingRight();
 	}
 
 	if (state == ZenChanState::ROAMING)
 	{
-		
-		if (map->TestBeforeFalling(GetHitbox()))
+		pos += {ZENCHAN_SPEED * direction, 0};
+
+		if (map->TestFalling(GetHitbox()))
 		{
 			if (GetRandomValue(0, 1))
 			{
+				TraceLog(LOG_INFO, "salta");
 				state = ZenChanState::JUMPING;
 			}
 			else
 			{
+				TraceLog(LOG_INFO, "salta");
 				state = ZenChanState::JUMPING;
 			}
-		}
-
-		if (map->TestCollisionWallRight(GetHitbox()))
-		{
-			StartWalkingLeft();
-		}
-		if (map->TestCollisionWallLeft(GetHitbox()))
-		{
-			StartWalkingRight();
-		}
-	}
-	else if (state == ZenChanState::JUMPING)
-	{
-		if (map->TestBeforeFalling(GetHitbox()))
-		{
-			if (current_pos < ZENCHAN_JUMP_HEIGHT)
-			{
-				pos += {0, -3};
-				current_pos += 3;
-			}
-			else
-			{
-				pos += {0, 3};
-			}
-		}
-		else
-		{
-			current_pos = 0;
-			state = ZenChanState::ROAMING;
 		}
 	}
 	else if (state == ZenChanState::FALLING)
 	{
 		if (map->TestFalling(GetHitbox()))
 		{
-			pos += {0, 3};
+			pos += {0, ZENCHAN_SPEED};
 		}
 		else {
 			state = ZenChanState::ROAMING;
 		}
+	}
+	else if (state == ZenChanState::JUMPING)
+	{
+		if (map->TestFalling(GetHitbox()))
+		{
+			pos += {ZENCHAN_SPEED * direction, 0};
+		}
+		else
+		{
+			state = ZenChanState::ROAMING;
+		}
+
 	}
 
 	sprite->Update();
@@ -123,13 +111,11 @@ void ZenChan::SetAnimation(int id)
 }
 void ZenChan::StartWalkingLeft()
 {
-	state = ZenChanState::ROAMING;
 	look = Look::LEFT;
 	SetAnimation((int)ZenChanAnim::WALKING_LEFT);
 }
 void ZenChan::StartWalkingRight()
 {
-	state = ZenChanState::ROAMING;
 	look = Look::RIGHT;
 	SetAnimation((int)ZenChanAnim::WALKING_RIGHT);
 }

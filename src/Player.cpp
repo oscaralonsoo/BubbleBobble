@@ -225,6 +225,8 @@ void Player::ChangeAnimLeft()
 }
 void Player::Update()
 {	
+	OutOfScreen();
+
 	if (state == PlayerState::DEAD)
 	{
 		LogicDead();

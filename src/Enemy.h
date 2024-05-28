@@ -4,9 +4,9 @@
 
 //Representation model size: 48x48
 #define ZENCHAN_FRAME_SIZE		48
-//Logical model size: 24x30
-#define ZENCHAN_PHYSICAL_WIDTH	24
-#define ZENCHAN_PHYSICAL_HEIGHT	30
+//Logical model size: 35x35
+#define ZENCHAN_PHYSICAL_WIDTH	35
+#define ZENCHAN_PHYSICAL_HEIGHT	35
 
 //Representation model size: 32x32
 #define TURRET_FRAME_SIZE		32
