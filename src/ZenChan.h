@@ -4,8 +4,8 @@
 
 #define ZENCHAN_SPEED			3
 #define ZENCHAN_ANIM_DELAY	(4*ANIM_DELAY)
-#define ZENCHAN_JUMP_HEIGHT     50
-#define ZENCHAN_JUMP_SPEED      2
+#define ZENCHAN_JUMP_HEIGHT     20
+#define ZENCHAN_JUMP_SPEED      1
 #define ZENCHAN_OFFSET          7   //offset colliders for avoid bugs
 
 enum class ZenChanState { ROAMING, JUMPING, FALLING };
@@ -47,5 +47,6 @@ private:
 	int current_step;	//current step of the pattern
 	int current_frames;	//number of frames in the current step
 	int current_pos;	//current pos before jump
+	int randomValue;	//50% posibilities jump/fall
 };
 

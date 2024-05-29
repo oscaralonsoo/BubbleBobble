@@ -9,6 +9,7 @@ ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int fra
 	current_step = 0;
 	current_frames = 0;
 	current_pos = 0;
+	randomValue = GetRandomValue(0, 1);
 }
 ZenChan::~ZenChan()
 {
@@ -70,17 +71,23 @@ bool ZenChan::Update(const AABB& box)
 	{
 		pos += {ZENCHAN_SPEED * direction, 0};
 
-		if (map->TestFalling(GetHitbox()))
-		{
-			if (GetRandomValue(0, 1))
+			if (randomValue)
 			{
-				state = ZenChanState::JUMPING;
+				if (map->TestBeforeFalling(GetHitbox(), direction))
+				{
+					state = ZenChanState::JUMPING;
+					randomValue = GetRandomValue(0, 1);
+				}
 			}
 			else
 			{
-				state = ZenChanState::FALLING;
+				if (map->TestFalling(GetHitbox()))
+				{
+					state = ZenChanState::FALLING;
+					randomValue = GetRandomValue(0, 1);
+				}
 			}
-		}
+		
 	}
 	else if (state == ZenChanState::FALLING)
 	{
@@ -94,7 +101,7 @@ bool ZenChan::Update(const AABB& box)
 	}
 	else if (state == ZenChanState::JUMPING)
 	{
-		if (map->TestFalling(GetHitbox()))
+		if (map->TestBeforeFalling(GetHitbox(), direction))
 		{
 			if (current_pos < ZENCHAN_JUMP_HEIGHT)
 			{
