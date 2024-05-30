@@ -6,6 +6,7 @@
 #include "Lifes.h"
 #include "EnemyManager.h"
 #include "Object.h"
+#include "BubbleManager.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
@@ -35,7 +36,9 @@ private:
     //Enemies present in the level
     EnemyManager* enemies;
 
-    std::vector<Bubble*> bubbles;
+    //Shots thrown by player
+    BubbleManager* bubbles;
+
     std::vector<Object*> objects;
     /*std::vector<Lifes*> lifes;*/
     TileMap* level;

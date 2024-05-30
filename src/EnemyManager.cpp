@@ -4,7 +4,6 @@
 
 EnemyManager::EnemyManager()
 {
-	shots = nullptr;
 }
 EnemyManager::~EnemyManager()
 {
@@ -27,10 +26,6 @@ void EnemyManager::SetTileMap(TileMap* tilemap)
 	{
 		enemy->SetTileMap(tilemap);
 	}
-}
-void EnemyManager::SetShotManager(ShotManager* shots)
-{
-	this->shots = shots;
 }
 void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look look)
 {
@@ -77,17 +72,10 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 }
 void EnemyManager::Update(const AABB& player_hitbox)
 {
-	bool shoot;
-	Point p, d;
 
 	for (Enemy* enemy : enemies)
 	{
-		shoot = enemy->Update(player_hitbox);
-		if (shoot)
-		{
-			enemy->GetShootingPosDir(&p, &d);
-			shots->Add(p, d);
-		}
+		enemy->Update(player_hitbox);
 	}
 }
 void EnemyManager::Draw() const
