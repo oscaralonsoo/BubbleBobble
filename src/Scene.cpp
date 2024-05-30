@@ -372,6 +372,7 @@ void Scene::Update()
 	level->Update();
 	player->Update();
 	CheckObjectCollisions();
+	CheckEnemiesCollisions();
 
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
@@ -432,6 +433,11 @@ void Scene::CheckObjectCollisions()
 			++it;
 		}
 	}
+}
+void Scene::CheckEnemiesCollisions()
+{
+	player->SetEnemiesHitbox(enemies->GetHitBoxes());
+	bubbles->SetEnemiesHitbox(enemies->GetHitBoxes());
 }
 void Scene::ClearLevel()
 {

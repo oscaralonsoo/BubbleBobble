@@ -23,6 +23,10 @@ void BubbleManager::SetParticleManager(ParticleManager* particles)
 {
 	this->particles = particles;
 }
+void BubbleManager::SetEnemiesHitbox(std::vector<AABB> hitboxes)
+{
+	this->enemies_hitbox = hitboxes;
+}
 void BubbleManager::Add(const Point& pos, const Point& dir)
 {
 	bool found = false;
@@ -45,7 +49,6 @@ void BubbleManager::Clear()
 void BubbleManager::Update(const AABB& player_hitbox)
 {
 	AABB box;
-	bool hit;
 
 	for (Bubble& bubble : bubbles)
 	{
@@ -56,21 +59,25 @@ void BubbleManager::Update(const AABB& player_hitbox)
 
 			//Check level collisions
 			box = bubble.GetHitbox();
-			hit = false;
-			if (bubble.IsMovingLeft())		  hit = map->TestCollisionWallLeft(box);
-			else if (bubble.IsMovingRight()) hit = map->TestCollisionWallRight(box);
 
-			//Check player collision
-			if (!hit) hit = box.TestAABB(player_hitbox);
-
-			/*if (hit)
+			//Check enemy collision
+			for (AABB hitbox : enemies_hitbox)
 			{
-				bubble.SetAlive(false);
-				Point p;
-				p.x = box.pos.x - (TILE_SIZE - BUBBLE_PHYSICAL_WIDTH) / 2;
-				p.y = box.pos.y - (TILE_SIZE - BUBBLE_PHYSICAL_HEIGHT) / 2;
-				//particles->Add(p);
-			}*/
+				if (box.TestAABB(hitbox))
+				{
+					bubble.StartHit();
+				}
+			}
+
+			//Check wall collision
+			if (bubble.IsMovingRight() && map->TestCollisionWallRight(box) || bubble.IsMovingLeft() && map->TestCollisionWallLeft(box))
+			{
+				if (bubble.GetAnimation() != BubbleAnim::HIT)
+				{
+					bubble.StartLevitating();
+				}
+			}
+
 		}
 	}
 }

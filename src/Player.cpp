@@ -14,7 +14,6 @@ Player::Player(const Point& p, PlayerState s, Look view) :
 	map = nullptr;
 	score = 0;
 	lifes = 2;
-	current_bubble = 0;
 }
 Player::~Player()
 {
@@ -90,6 +89,10 @@ AppStatus Player::Initialise()
 void Player::SetShotManager(BubbleManager* bubbles)
 {
 	this->bubbles = bubbles;
+}
+void Player::SetEnemiesHitbox(std::vector<AABB> hitboxes)
+{
+	this->enemies_hitbox = hitboxes;
 }
 void Player::InitScore()
 {
@@ -195,7 +198,7 @@ void Player::StartDeath()
 	if (GetAnimation() != PlayerAnim::DEAD_LEFT && GetAnimation() != PlayerAnim::DEAD_RIGHT)
 	{
 		state = PlayerState::DEAD;
-		DecrLifes();
+		//DecrLifes();
 		if (IsLookingRight())	SetAnimation((int)PlayerAnim::DEAD_RIGHT);
 		else					SetAnimation((int)PlayerAnim::DEAD_LEFT);
 	}
@@ -236,6 +239,14 @@ void Player::Update()
 	}
 	else
 	{
+		for (AABB hitbox : enemies_hitbox)
+		{
+			if (GetHitbox().TestAABB(hitbox))
+			{
+				StartDeath();
+			}
+		}
+
 		MoveX();
 		MoveY();
 

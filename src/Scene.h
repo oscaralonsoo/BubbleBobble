@@ -27,6 +27,7 @@ private:
     AppStatus LoadLevel(int stage);
 
     void CheckObjectCollisions();
+    void CheckEnemiesCollisions();
     void ClearLevel();
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;

@@ -21,6 +21,8 @@ public:
 	//Set the TileMap reference for managing shot collisions
 	void SetParticleManager(ParticleManager* particles);
 
+	void SetEnemiesHitbox(std::vector<AABB> hitboxes);
+
 	//Add a new shot with the given position and direction
 	void Add(const Point& pos, const Point& dir);
 
@@ -46,5 +48,8 @@ private:
 	//Reference to the TileMap object
 	//This class does not own the object, it only holds a reference to it
 	ParticleManager* particles;
+
+	//Array of all the hitboxes of the enemies in the scene
+	std::vector<AABB> enemies_hitbox;
 };
 

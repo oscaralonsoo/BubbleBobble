@@ -70,9 +70,19 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 	AABB hitbox(p, width, height);
 	return hitbox;
 }
+std::vector<AABB> EnemyManager::GetHitBoxes() const
+{
+	std::vector<AABB> hitboxes;
+
+	for (Enemy* enemy : enemies)
+	{
+		hitboxes.push_back(enemy->GetHitbox());
+	}
+
+	return hitboxes;
+}
 void EnemyManager::Update(const AABB& player_hitbox)
 {
-
 	for (Enemy* enemy : enemies)
 	{
 		enemy->Update(player_hitbox);

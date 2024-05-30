@@ -16,12 +16,12 @@
 #define ANIM_DELAY				10
 
 
-enum class BubbleState { DISABLED, LAUNCHING, LEVITATING};
+enum class BubbleState { LAUNCHING, LEVITATING, HIT};
 enum class Direction { RIGHT, LEFT };
 
 //Rendering states
 enum class BubbleAnim {
-	DISABLED, LAUNCHING, LEVITATING,
+	LAUNCHING, LEVITATING, HIT,
 	NUM_ANIMATIONS
 };
 
@@ -42,6 +42,7 @@ public:
 	void SetAnimation(int id);
 	BubbleAnim GetAnimation();
 	void StartLaunching();
+	void StartHit();
 	void StartLevitating();
 
 	//Logic management

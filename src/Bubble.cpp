@@ -27,6 +27,10 @@ Bubble::Bubble()
 	for (i = 0; i < 5; ++i)
 		sprite->AddKeyFrame((int)BubbleAnim::LAUNCHING, { (float)i * n, 0, n, n });
 
+	sprite->SetAnimationDelay((int)BubbleAnim::HIT, 10);
+	for (i = 2; i < 5; ++i)
+		sprite->AddKeyFrame((int)BubbleAnim::HIT, { (float)i * n, n, n, n });
+
 	SetAlive(false);
 }
 Bubble::~Bubble()
@@ -63,6 +67,12 @@ void Bubble::StartLaunching()
 		SetAnimation((int)BubbleAnim::LAUNCHING);
 	}
 }
+void Bubble::StartHit()
+{
+	state = BubbleState::LEVITATING;
+	SetAnimation((int)BubbleAnim::HIT);
+	
+}
 void Bubble::StartLevitating()
 {
 	if (GetAnimation() != BubbleAnim::LEVITATING)
@@ -88,7 +98,6 @@ void Bubble::HandleStates()
 	}
 	else if (state == BubbleState::LEVITATING)
 	{
-		StartLevitating();
 		LogicLevitating();
 	}
 }
@@ -103,7 +112,7 @@ void Bubble::LogicLaunching()
 
 		if (sprite->IsLastFrame())
 		{
-			state = BubbleState::LEVITATING;
+			StartLevitating();
 		}
 	}
 }
