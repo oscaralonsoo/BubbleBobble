@@ -28,20 +28,23 @@ enum class BubbleAnim {
 class Bubble : public Entity
 {
 public:
-	Bubble(int id, const Point& p, BubbleState s, Direction dir);
+	Bubble();
 	~Bubble();
 
 	void Update();
 
+	void Init(const Point& p, const Point& dir);
+	bool IsMovingLeft() const;
+	bool IsMovingRight() const;
 	void DrawDebug(const Color& col) const;
 
-	// Animation management
+	//Animation management
 	void SetAnimation(int id);
 	BubbleAnim GetAnimation();
-	void Disable();
-	void StartLaunching(Point pos, int dir);
+	void StartLaunching();
 	void StartLevitating();
 
+	//Logic management
 	void LogicLaunching();
 	void LogicLevitating();
 	void HandleStates();
@@ -52,10 +55,6 @@ public:
 
 	BubbleState state;
 
-
 private:
-	int direction;
-
 	TileMap* map;
-	int bubbleId;
 };

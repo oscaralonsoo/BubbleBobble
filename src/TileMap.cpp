@@ -28,19 +28,11 @@ void TileMap::InitTileDictionary()
 	dict_rect[(int)Tile::BLOCK_SQUARE1_R] = { 2 * n,  0, n, n };
 	dict_rect[(int)Tile::BLOCK_SQUARE1_B] = { 3 * n, 0, n, n };
 	dict_rect[(int)Tile::BLOCK_SQUARE1_BL] = { 4 * n, 0, n, n };
-	dict_rect[(int)Tile::BLOCK_WALL_L1] = { 0, n, n, n };
-	dict_rect[(int)Tile::BLOCK_WALL_R1] = { n, n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_L] = { 0, n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_R] = { n, n, n, n };
 	dict_rect[(int)Tile::BLOCK_SQUARE1_BR] = { 2 * n, n, n, n };
 	dict_rect[(int)Tile::BLOCK_SQUARE1_TR] = { 3 * n, n, n, n };
 	dict_rect[(int)Tile::BLOCK_CORNER] = { 4 * n, n, n, n };
-	dict_rect[(int)Tile::BLOCK_SQUARE2] = { 0, 2 * n, n, n };
-	dict_rect[(int)Tile::BLOCK_CORNER2] = { n, 2 * n, n, n };
-	dict_rect[(int)Tile::BLOCK_UPCORNER2] = {2 * n, 2 * n, n, n };
-	dict_rect[(int)Tile::BLOCK_VFINAL2] = { 3 * n, 2 * n, n, n };
-	dict_rect[(int)Tile::BLOCK_SHADOW2] = { 4 * n, 2 * n, n, n };
-	dict_rect[(int)Tile::BLOCK_DOWNSHADOW2] = { 5 * n, 2 * n, n, n };
-	dict_rect[(int)Tile::BLOCK_HFINAL2] = { 0, 3 * n, n, n };
-	
 }
 AppStatus TileMap::Initialise()
 {
@@ -136,7 +128,7 @@ bool TileMap::TestFalling(const AABB& box) const
 }
 bool TileMap::TestBeforeFalling(const AABB& box, int dir) const
 {
-	return !CollisionY(box.pos + Point(box.width * dir, box.height), box.width);
+	return !CollisionY(box.pos + Point(box.width/4 * dir, box.height), box.width);
 }
 bool TileMap::CollisionX(const Point& p, int distance) const
 {

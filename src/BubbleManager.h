@@ -1,17 +1,17 @@
 #pragma once
 #pragma once
 #include <array>
-#include "Shot.h"
+#include "Bubble.h"
 #include "TileMap.h"
 #include "ParticleManager.h"
 
-#define MAX_SHOTS		16
+#define MAX_BUBBLES		16
 
-class ShotManager
+class BubbleManager
 {
 public:
-	ShotManager();
-	~ShotManager();
+	BubbleManager();
+	~BubbleManager();
 
 	AppStatus Initialise();
 
@@ -37,7 +37,7 @@ public:
 	void DrawDebug(const Color& col) const;
 
 private:
-	std::array<Shot, MAX_SHOTS> shots;
+	std::array<Bubble, MAX_BUBBLES> bubbles;
 
 	//Reference to the TileMap object
 	//This class does not own the object, it only holds a reference to it

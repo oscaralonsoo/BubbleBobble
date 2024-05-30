@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.h"
-#include "Bubble.h"
 #include "TileMap.h"
+#include "BubbleManager.h"
 
 //Representation model size: 48x48
 #define PLAYER_FRAME_SIZE		48
@@ -12,6 +12,9 @@
 
 //Horizontal speed and vertical speed while falling down
 #define PLAYER_SPEED			2.6
+
+//Speed of the bubble launched by the player
+#define PLAYER_SHOOT_SPEED		7
 
 //When jumping, initial jump speed and maximum falling speed
 #define PLAYER_JUMP_FORCE		16
@@ -54,10 +57,14 @@ enum class PlayerAnim {
 class Player: public Entity
 {
 public:
-	Player(const Point& p, PlayerState s, Look view, std::vector<Bubble*>& b);
+	Player(const Point& p, PlayerState s, Look view);
 	~Player();
 	
 	AppStatus Initialise();
+
+	//Set the ShotManager reference for managing enemy shots
+	void SetShotManager(BubbleManager* bubbles);
+
 	void SetTileMap(TileMap* tilemap);
 
 	void InitScore();
@@ -100,10 +107,13 @@ private:
 	bool IsAscending() const;
 	bool IsDescending() const;
 
+	//Reference to the ShotManager object
+	//This class does not own the object, it only holds a reference to it
+	BubbleManager* bubbles;
+
 	PlayerState state;
 	Look look;
 	int jump_delay;
-	std::vector<Bubble*> bubbles;
 	TileMap *map;
 
 	int score;

@@ -5,14 +5,13 @@
 #include "Globals.h"
 #include <raymath.h>
 
-Player::Player(const Point& p, PlayerState s, Look view, std::vector<Bubble*>& b) :
+Player::Player(const Point& p, PlayerState s, Look view) :
 	Entity(p, PLAYER_PHYSICAL_WIDTH, PLAYER_PHYSICAL_HEIGHT, PLAYER_FRAME_SIZE, PLAYER_FRAME_SIZE)
 {
 	state = s;
 	look = view;
 	jump_delay = PLAYER_JUMP_DELAY;
 	map = nullptr;
-	bubbles = b;
 	score = 0;
 	lifes = 2;
 	current_bubble = 0;
@@ -87,6 +86,10 @@ AppStatus Player::Initialise()
 	bubbleJump = LoadSound("Sprites/SFX/soundjump.wav");
 
 	return AppStatus::OK;
+}
+void Player::SetShotManager(BubbleManager* bubbles)
+{
+	this->bubbles = bubbles;
 }
 void Player::InitScore()
 {
@@ -414,17 +417,8 @@ void Player::LogicJumping()
 }
 void Player::LogicShooting()
 {
-	if ((bubbles.size() - 1) > current_bubble)
-	{
-		current_bubble++;
-	}
-	else {
-		current_bubble = 0;
-	}
-
-	bubbles[current_bubble]->StartLaunching(GetPos(), (int)look);
-	bubbles[current_bubble]->state = BubbleState::LAUNCHING;
-	
+	if (look == Look::RIGHT)	bubbles->Add(pos, { PLAYER_SHOOT_SPEED, 0 });
+	else					bubbles->Add(pos, { -PLAYER_SHOOT_SPEED, 0 });
 }
 
 void Player::DrawDebug(const Color& col) const

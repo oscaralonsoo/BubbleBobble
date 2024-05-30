@@ -5,9 +5,9 @@
 Scene::Scene()
 {
 	player = nullptr;
-	bubbles.clear();
 	level = nullptr;
 	enemies = nullptr;
+	bubbles = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
@@ -24,19 +24,16 @@ Scene::~Scene()
 		delete player;
 		player = nullptr;
 	}
-	if (!bubbles.empty())
-	{
-		for (Bubble* bubble : bubbles) {
-			bubble->Release();
-			delete bubble;
-		}
-		bubbles.clear();
-	}
 	if (enemies != nullptr)
 	{
 		enemies->Release();
 		delete enemies;
 		enemies = nullptr;
+	}
+	if (bubbles != nullptr)
+	{
+		delete bubbles;
+		bubbles = nullptr;
 	}
     if (level != nullptr)
     {
@@ -52,27 +49,8 @@ Scene::~Scene()
 }
 AppStatus Scene::Init()
 {
-	//Create bubbles
-	for (int i = 0; i < MAX_BUBBLES; i++)
-	{
-		bubbles.push_back(new Bubble(i, PLAYER_SPAWN, BubbleState::DISABLED, Direction::RIGHT));
-	}
-	if (bubbles.empty())
-	{
-		LOG("Failed to allocate memory for Bubble");
-		return AppStatus::ERROR;
-	}
-	//Initialise bubbles
-	for (Bubble* bubble : bubbles) {
-		if (bubble->Initialise() != AppStatus::OK)
-		{
-			LOG("Failed to initialise Bubble");
-			return AppStatus::ERROR;
-		}
-	}
-
 	//Create player
-	player = new Player(PLAYER_SPAWN, PlayerState::IDLE, Look::RIGHT, bubbles);
+	player = new Player(PLAYER_SPAWN, PlayerState::IDLE, Look::RIGHT);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -96,6 +74,20 @@ AppStatus Scene::Init()
 	if (enemies->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Enemy Manager");
+		return AppStatus::ERROR;
+	}
+
+	//Create bubble manager 
+	bubbles = new BubbleManager();
+	if (bubbles == nullptr)
+	{
+		LOG("Failed to allocate memory for Shot Manager");
+		return AppStatus::ERROR;
+	}
+	//Initialise bubble manager
+	if (bubbles->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Shot Manager");
 		return AppStatus::ERROR;
 	}
 
@@ -143,12 +135,11 @@ AppStatus Scene::Init()
 	//Assign the tile map reference to the enemies to check collisions while rooming
 	enemies->SetTileMap(level);
 
-	//Assign the tile map reference to the shot manager to check collisions when shots are shot
-	//shots->SetTileMap(level);
+	//Assign the tile map reference to the shot manager to check collisions when bubbles are shot
+	bubbles->SetTileMap(level);
 
-	for (Bubble* bubble : bubbles) {
-		bubble->SetTileMap(level);
-	}
+	//Assign the shot manager reference to the enemy manager so enemies can add bubbles
+	player->SetShotManager(bubbles);
 
     return AppStatus::OK;
 }
@@ -168,39 +159,6 @@ AppStatus Scene::LoadLevel(int stage)
 	if (stage == 1)
 	{
 		map = new int[size] {																																			 
-			 4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,
-			 4,   4,   11,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,  14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   101,   0,    0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,    4,   4,    15,   0,   0,    4,    4,    4,    4,    4,    4,   4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    15,   0,    0,   4,   4,   4,   4,
-			 4,   4,   11,   14,   12,   0,   0,   16,   14,   14,   14,   14,   14,  14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   12,   0,   0,   16,   14,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,    4,   4,   15,   0,   0,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   15,   0,   0,   4,   4,   4,   4,
-			 4,   4,   11,   14,   12,   0,   0,   16,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   12,   0,   0,   16,   14,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,    4,   4,   15,   0,   0,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   15,   0,   0,   4,   4,   4,   4,
-			 4,   4,   11,   14,   12,   0,   0,   16,   14,   14,   14,   14,   14,   14,   14,  14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   12,   0,   0,   16,   14,   4,   4,
-			 4,	  4,   13,	 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   13,   100, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   4,   4,
-			 4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4
-
-		};
-		player->InitScore();
-	}
-	else if (stage == 2)
-	{
-		map = new int[size] {
 			 2,   3,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   2,   3,
 			 2,   3,   9,   5,   5,   5,   5,   5,   5,   7,   0,   0,   0,   6,   5,   5,   5,   5,   5,   7,   0,   0,   0,   6,   5,   5,   5,   5,   5,   5,   2,   3,
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
@@ -227,6 +185,30 @@ AppStatus Scene::LoadLevel(int stage)
 			 2,   3,   4,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   4,   100, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   3,
 			 2,   3,   1,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   8,   0,   0,   0,   1,   1,   1,   1,   1,   1,   1,   2,   3
+
+		};
+		player->InitScore();
+	}
+	else if (stage == 2)
+	{
+		map = new int[size] {
+			13,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  13,   0,   0,   0,   0,   0,   0,   0,   0,	  0,   0,   0,  13,
+			 11,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   9,   0,   0,   0,   0,   0,   0,   0,   0,	  0,   0,   0,   9,
+			10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,   0,   0,   0,   0,   0,   0,   0,   0,  63,   0,   0,  10,
+			 9,   0,   0,   0,  62,   0,   0,   0,   0,   0,   0,   0,   9,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   9,
+			10,   0,   0,  62,   0,   0,   0,   0,   0,   0,   0,   0,  10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
+			 9,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   9,  22,  23,  13,  17,  18,  17,  18,  17,  18,  13,   0,   9,
+			10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,  20,  21,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
+			 9,   0,  13,  17,  18,  17,  18,  17,  18,  13,  22,  23,  13,  20,  21,   0,   0,   0,   0,   0,   0,   0,   0,   0,   9,
+			10,   0,   0,   0,   0,   0,   0,   0,   0,   0,  20,  21,   0,  20,  21,   0,   0,   0,   0,   0,   0,   0,   0,  13,  10,
+			 9,   0,   0,   0,   0,   0,   0,   0,   0,   0,  20,  21,   0,  20,  21,   0,   0,   0,   0,   0,   0,	  0,   0,   0,   9,
+			10,  13,   0,   0,   0,  62,  62,   0,   0,   0,  20,  21,   0,  20,  21,   0,   0,   0,  63,   0,   0,   0,   0,   0,  10,
+			 9,   0,   0,   0,   0,   0,   0,   0,   0,   0,  20,  21,   0,  20,  21,   0,   0,  63,   0,  63,   0,   0,   0,  13,   9,
+			10,   0,   0,  -1,   0,   0,   0,   0,   0,   0,  20,  21,   0,  20,  21,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
+			 9,  13,   0, 100,   0,   0,   0,   0,   0,   0,  20,  21,   0,  20,  21,   0,   0,   0,   0,   0,   0,   0,   0,   0,   9,
+			10,  17,  18,  13,   0,   0,   0,   0,  13,  17,  18,  17,  18,  17,  18,  17,  13,   0,   0,   0,   0,	 13,  17,  18,  10,
+			 9,   1,   2,  40,  70,  70,  70,  70,  41,   9,   5,   6,   9,   5,   6,   9,  40,  70,  70,  70,  70,  41,   1,   2,   9,
+			10,   3,   4,  13,  14,  15,  16,  11,  12,  10,   7,   8,  10,   7,   8,  10,  13,  14,  15,  16,  11,  12,   3,   4,   10
 		};
 	}
 	else
@@ -319,9 +301,7 @@ void Scene::Update()
 
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
-	for (Bubble* bubble : bubbles) {
-		bubble->Update();
-	}
+	bubbles->Update(hitbox);
 }
 void Scene::Render()
 {
@@ -333,18 +313,14 @@ void Scene::Render()
 		RenderObjects(); 
 		enemies->Draw();
 		player->Draw();
-		for (Bubble* bubble : bubbles) {
-			bubble->Draw();
-		}
+		bubbles->Draw();
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
 		RenderObjectsDebug(YELLOW);
 		player->DrawDebug(GREEN);
 		enemies->DrawDebug();
-		for (Bubble* bubble : bubbles) {
-			bubble->DrawDebug(BLUE);
-		}
+		bubbles->DrawDebug(GRAY);
 	}
 
 	EndMode2D();
@@ -356,9 +332,6 @@ void Scene::Release()
     level->Release();
 	player->Release();
 
-	for (Bubble* bubble : bubbles) {
-		bubble->Release();
-	}
 	ClearLevel();
 }
 void Scene::CheckObjectCollisions()
@@ -393,7 +366,7 @@ void Scene::ClearLevel()
 		delete obj;
 	}
 	objects.clear();
-
+	bubbles->Clear();
 	enemies->Release();
 }
 void Scene::RenderObjects() const
