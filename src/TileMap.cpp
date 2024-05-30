@@ -24,15 +24,55 @@ void TileMap::InitTileDictionary()
 {
 	const int n = TILE_SIZE;
 
+//LVL 3
+
 	dict_rect[(int)Tile::BLOCK_SQUARE1] = { n,  0, n, n };
-	dict_rect[(int)Tile::BLOCK_SQUARE1_R] = { 2 * n,  0, n, n };
-	dict_rect[(int)Tile::BLOCK_SQUARE1_B] = { 3 * n, 0, n, n };
-	dict_rect[(int)Tile::BLOCK_SQUARE1_BL] = { 4 * n, 0, n, n };
-	dict_rect[(int)Tile::BLOCK_WALL_L] = { 0, n, n, n };
-	dict_rect[(int)Tile::BLOCK_WALL_R] = { n, n, n, n };
-	dict_rect[(int)Tile::BLOCK_SQUARE1_BR] = { 2 * n, n, n, n };
-	dict_rect[(int)Tile::BLOCK_SQUARE1_TR] = { 3 * n, n, n, n };
-	dict_rect[(int)Tile::BLOCK_CORNER] = { 4 * n, n, n, n };
+	dict_rect[(int)Tile::BLOCK_VSHADOW1] = { 2 * n,  0, n, n };
+	dict_rect[(int)Tile::BLOCK_HSHADOW1] = { 3 * n, 0, n, n };
+	dict_rect[(int)Tile::BLOCK_HFINAL1] = { 4 * n, 0, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_L1] = { 0, n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_R1] = { n, n, n, n };
+	dict_rect[(int)Tile::BLOCK_UPCORNER1] = { 2 * n, n, n, n };
+	dict_rect[(int)Tile::BLOCK_VFINAL1] = { 3 * n, n, n, n };
+	dict_rect[(int)Tile::BLOCK_CORNER1] = { 4 * n, n, n, n };
+
+//LVL 1
+
+	dict_rect[(int)Tile::BLOCK_SQUARE2] = { 0,  2 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_CORNER2] = { n,  2 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_UPCORNER2] = { 2 * n,  2 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_VFINAL2] = { 3 * n,  2 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_HSHADOW2] = { 4 * n,  2 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_VSHADOW2] = { 5 * n,  2 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_HFINAL2] = { 0,  3 * n, n, n };
+
+//LVL 13
+
+	dict_rect[(int)Tile::BLOCK_SQUARE3] = { 2 * n,  4 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_UL3] = { 0,  4 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_UR3] = { n,  4 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_DL3] = { 0,  5 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_DR3] = { n,  5 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_HSHADOW3] = { 3 * n,  4 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_VFINAL3] = { 4 * n,  4 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_CORNER3] = { 5 * n,  4 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_VSHADOW3] = { 2 * n,  5 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_UPCORNER3] = { 3 * n,  5 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_HFINAL3] = { 4 * n,  5 * n, n, n };
+
+//LVL 14
+
+	dict_rect[(int)Tile::BLOCK_SQUARE4] = { 2 * n,  6 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_UL4] = { 0,  6 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_UR4] = { n,  6 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_DL4] = { 0,  7 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_WALL_DR4] = { n,  7 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_HSHADOW4] = { 3 * n,  6 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_VFINAL4] = { 4 * n,  6 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_CORNER4] = { 5 * n,  6 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_VSHADOW4] = { 2 * n,  7 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_UPCORNER4] = { 3 * n,  7 * n, n, n };
+	dict_rect[(int)Tile::BLOCK_HFINAL4] = { 4 * n,  7 * n, n, n };
 }
 AppStatus TileMap::Initialise()
 {
