@@ -11,7 +11,7 @@
 #define PLAYER_PHYSICAL_HEIGHT	35
 
 //Horizontal speed and vertical speed while falling down
-#define PLAYER_SPEED			2.6
+#define PLAYER_SPEED			3.1
 
 //Speed of the bubble launched by the player
 #define PLAYER_SHOOT_SPEED		7
@@ -32,10 +32,10 @@
 #define PLAYER_SPAWN			{75, 595}
 
 //Player animations delay
-#define ANIM_IDLE_DELAY			18
-#define ANIM_WALKING_DELAY		8
+#define ANIM_IDLE_DELAY			16
+#define ANIM_WALKING_DELAY		3
 #define ANIM_JUMPING_DELAY		5
-#define ANIM_FALLING_DELAY		12
+#define ANIM_FALLING_DELAY		10
 #define ANIM_SHOOTING_DELAY		3
 #define ANIM_DEAD_DELAY			7
 
