@@ -8,6 +8,8 @@ Scene::Scene()
 	level = nullptr;
 	enemies = nullptr;
 	bubbles = nullptr;
+
+	font1 = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
@@ -41,6 +43,11 @@ Scene::~Scene()
         delete level;
         level = nullptr;
     }
+	if (font1 != nullptr)
+	{
+		delete font1;
+		font1 = nullptr;
+	}
 	for (Entity* obj : objects)
 	{
 		delete obj;
@@ -140,6 +147,19 @@ AppStatus Scene::Init()
 
 	//Assign the shot manager reference to the enemy manager so enemies can add bubbles
 	player->SetShotManager(bubbles);
+
+	font1 = new Text();
+	if (font1 == nullptr)
+	{
+		LOG("Failed to allocate memory for font 1");
+		return AppStatus::ERROR;
+	}
+	//Initialise text font 1
+	if (font1->Initialise(Resource::IMG_TEXT, "images/text.png", ' ', 16) != AppStatus::OK)
+	{
+		LOG("Failed to initialise Level");
+		return AppStatus::ERROR;
+	}
 
     return AppStatus::OK;
 }
@@ -465,10 +485,24 @@ void Scene::RenderObjectsDebug(const Color& col) const
 }
 void Scene::RenderGUI() const
 {
-	//Temporal approach
-	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
 
-	DrawText(TextFormat("LIFES : %d", player->GetLifes()), 410, 5, 20, LIGHTGRAY);
+	static int frame;
+	frame++;
+	frame %= 1000;
+
+	font1->Draw(80, 10, TextFormat("1UP"), GREEN);
+	font1->Draw(80, 25, TextFormat("SCORE:%d", player->GetScore()), WHITE);
+	font1->Draw(600, 10, TextFormat("2UP"), BLUE);
+	font1->Draw(600, 25, TextFormat("SCORE:%d", player->GetScore()), WHITE);
+	font1->Draw(310, 20, TextFormat("HIGH SCORE"), RED);
+	
+
+
+
+ 	//Temporal approach
+	/*DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
+
+	DrawText(TextFormat("LIFES : %d", player->GetLifes()), 410, 5, 20, LIGHTGRAY);*/
 
 	/*for (Lifes* life : lifes) {
 		life->Draw();

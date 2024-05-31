@@ -1,8 +1,8 @@
 #pragma once
 #include "Globals.h"
 #include "Scene.h"
+#include "FadeTransition.h"
 
-enum class GameState { MAIN_TITLE, MAIN_MENU, LOOSE, PLAYING, SETTINGS, CREDITS };
 
 class Game
 {
@@ -31,4 +31,7 @@ private:
     //To work with original game units and then scale the result
     RenderTexture2D target;
     Rectangle src, dst;
+
+    //To make fade out/in transitions effects
+    FadeTransition fade_transition;
 };
