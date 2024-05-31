@@ -8,7 +8,7 @@ Scene::Scene()
 	level = nullptr;
 	enemies = nullptr;
 	bubbles = nullptr;
-
+	particles = nullptr;
 	font1 = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
@@ -36,6 +36,11 @@ Scene::~Scene()
 	{
 		delete bubbles;
 		bubbles = nullptr;
+	}
+	if (particles != nullptr)
+	{
+		delete particles;
+		particles = nullptr;
 	}
     if (level != nullptr)
     {
@@ -117,6 +122,20 @@ AppStatus Scene::Init()
 		}
 	}
 	*/
+	//Create particle manager 
+	particles = new ParticleManager();
+	if (particles == nullptr)
+	{
+		LOG("Failed to allocate memory for Particle Manager");
+		return AppStatus::ERROR;
+	}
+	//Initialise particle manager
+	if (particles->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Particle Manager");
+		return AppStatus::ERROR;
+	}
+
 	//Create level 
     level = new TileMap();
     if (level == nullptr)
@@ -145,8 +164,13 @@ AppStatus Scene::Init()
 	//Assign the tile map reference to the shot manager to check collisions when bubbles are shot
 	bubbles->SetTileMap(level);
 
+	//Assign the particle manager reference to the shot manager to add particles when shots collide
+	bubbles->SetParticleManager(particles);
+
 	//Assign the shot manager reference to the enemy manager so enemies can add bubbles
 	player->SetShotManager(bubbles);
+
+	bubbles->SetEnemies(enemies->GetEnemies());
 
 	font1 = new Text();
 	if (font1 == nullptr)
@@ -391,12 +415,14 @@ void Scene::Update()
 
 	level->Update();
 	player->Update();
+
 	CheckObjectCollisions();
 	CheckEnemiesCollisions();
 
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
 	bubbles->Update(hitbox);
+	particles->Update();
 }
 void Scene::Render()
 {
@@ -417,6 +443,7 @@ void Scene::Render()
 		enemies->DrawDebug();
 		bubbles->DrawDebug(GRAY);
 	}
+	particles->Draw();
 
 	EndMode2D();
 
@@ -457,7 +484,6 @@ void Scene::CheckObjectCollisions()
 void Scene::CheckEnemiesCollisions()
 {
 	player->SetEnemiesHitbox(enemies->GetHitBoxes());
-	bubbles->SetEnemiesHitbox(enemies->GetHitBoxes());
 }
 void Scene::ClearLevel()
 {
@@ -468,6 +494,7 @@ void Scene::ClearLevel()
 	objects.clear();
 	bubbles->Clear();
 	enemies->Release();
+	particles->Clear();
 }
 void Scene::RenderObjects() const
 {

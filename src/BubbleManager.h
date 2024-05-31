@@ -4,6 +4,7 @@
 #include "Bubble.h"
 #include "TileMap.h"
 #include "ParticleManager.h"
+#include "EnemyManager.h"
 
 #define MAX_BUBBLES		16
 
@@ -15,13 +16,14 @@ public:
 
 	AppStatus Initialise();
 
-	//Set the TileMap reference for managing shot collisions
+	//Set the TileMap reference for managing bubble collisions
 	void SetTileMap(TileMap* tilemap);
 
-	//Set the TileMap reference for managing shot collisions
+	//Set the particles manager for bubble explosion
 	void SetParticleManager(ParticleManager* particles);
 
-	void SetEnemiesHitbox(std::vector<AABB> hitboxes);
+	//Set the enemies for interactions
+	void SetEnemies(std::vector<Enemy*> enemies);
 
 	//Add a new shot with the given position and direction
 	void Add(const Point& pos, const Point& dir);
@@ -49,7 +51,6 @@ private:
 	//This class does not own the object, it only holds a reference to it
 	ParticleManager* particles;
 
-	//Array of all the hitboxes of the enemies in the scene
-	std::vector<AABB> enemies_hitbox;
+	std::vector<Enemy*> enemies;
 };
 

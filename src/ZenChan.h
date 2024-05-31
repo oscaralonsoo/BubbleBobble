@@ -8,9 +8,9 @@
 #define ZENCHAN_JUMP_SPEED      1
 #define ZENCHAN_OFFSET          7   //offset colliders for avoid bugs
 
-enum class ZenChanState { ROAMING, JUMPING, FALLING };
+enum class ZenChanState { ROAMING, JUMPING, FALLING, HITTED };
 enum class ZenChanAnim {
-	WALKING_LEFT, WALKING_RIGHT,
+	WALKING_LEFT, WALKING_RIGHT, HITTED,
 	NUM_ANIMATIONS
 };
 

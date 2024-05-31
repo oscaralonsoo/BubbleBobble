@@ -22,6 +22,9 @@ public:
 	//Retrieve the hitbox of all the enemies in the scene
 	std::vector<AABB> GetHitBoxes() const;
 
+	//Retrieve the hitbox of all the enemies in the scene
+	std::vector<Enemy*> GetEnemies() const;
+
 	//Update enemies according to their logic. If the given player hitbox is visible to them,
 	//they will shoot by adding shots to the ShotManager
 	void Update(const AABB& player_hitbox);

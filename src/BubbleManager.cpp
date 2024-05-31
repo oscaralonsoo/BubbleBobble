@@ -23,9 +23,9 @@ void BubbleManager::SetParticleManager(ParticleManager* particles)
 {
 	this->particles = particles;
 }
-void BubbleManager::SetEnemiesHitbox(std::vector<AABB> hitboxes)
+void BubbleManager::SetEnemies(std::vector<Enemy*> enemies)
 {
-	this->enemies_hitbox = hitboxes;
+	this->enemies = enemies;
 }
 void BubbleManager::Add(const Point& pos, const Point& dir)
 {
@@ -39,7 +39,7 @@ void BubbleManager::Add(const Point& pos, const Point& dir)
 			break;
 		}
 	}
-	if (!found) LOG("Not enough space to add a new shot in the BubbleManager!");
+	if (!found) LOG("Not enough space to add a new bubble in the BubbleManager!");
 }
 void BubbleManager::Clear()
 {
@@ -61,10 +61,12 @@ void BubbleManager::Update(const AABB& player_hitbox)
 			box = bubble.GetHitbox();
 
 			//Check enemy collision
-			for (AABB hitbox : enemies_hitbox)
+			for (Enemy* enemy : enemies)
 			{
-				if (box.TestAABB(hitbox))
+				if (box.TestAABB(enemy->GetHitbox()) && bubble.state == BubbleState::LAUNCHING)
 				{
+					bubble.SetPos(enemy->GetPos());
+					enemy->SetAlive(false);
 					bubble.StartHit();
 				}
 			}
@@ -78,9 +80,22 @@ void BubbleManager::Update(const AABB& player_hitbox)
 				}
 			}
 
+			//Check player collision
+			if (box.TestAABB(player_hitbox) && bubble.state != BubbleState::LAUNCHING)
+			{
+				bubble.SetAlive(false);
+				bubble.StartLaunching();
+
+				Point p;
+				p.x = box.pos.x - (TILE_SIZE - BUBBLE_PHYSICAL_WIDTH) / 2;
+				p.y = box.pos.y - (TILE_SIZE - BUBBLE_PHYSICAL_HEIGHT) / 2;
+				particles->Add(p);
+			}
+
 		}
 	}
 }
+
 void BubbleManager::Draw() const
 {
 	//Iterate over the shots vector by reference instead of by value to avoid a copy

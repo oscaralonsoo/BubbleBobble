@@ -3,18 +3,19 @@
 
 Particle::Particle()
 {
-	const int n = TILE_SIZE;
+	const int n = PARTICLE_FRAME_SIZE;
 
 	ResourceManager& data = ResourceManager::Instance();
-	render = new Sprite(data.GetTexture(Resource::IMG_ENEMY));
+	render = new Sprite(data.GetTexture(Resource::IMG_BUBBLE));
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->SetNumberAnimations(1);
 
 	sprite->SetAnimationDelay(0, PARTICLE_ANIM_DELAY);
-	sprite->AddKeyFrame(0, { 2 * n,   n, PARTICLE_FRAME_SIZE, PARTICLE_FRAME_SIZE });
-	sprite->AddKeyFrame(0, { 2 * n, 2 * n, PARTICLE_FRAME_SIZE, PARTICLE_FRAME_SIZE });
-	sprite->AddKeyFrame(0, { 2 * n, 3 * n, PARTICLE_FRAME_SIZE, PARTICLE_FRAME_SIZE });
+	sprite->AddKeyFrame(0, { 0, 2 * n, n, n });
+	sprite->AddKeyFrame(0, { n, 2 * n, n, n });
+	sprite->AddKeyFrame(0, { 0, 2 * n, n, n });
+	sprite->AddKeyFrame(0, { n, 2 * n, n, n });
 
 	sprite->SetAnimation(0);
 
@@ -37,7 +38,7 @@ bool Particle::Update()
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
 
-	return sprite->IsAnimationComplete();
+	return sprite->IsLastFrame();
 }
 void Particle::Draw() const
 {

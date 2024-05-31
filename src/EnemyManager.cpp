@@ -70,6 +70,10 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 	AABB hitbox(p, width, height);
 	return hitbox;
 }
+std::vector<Enemy*> EnemyManager::GetEnemies() const
+{
+	return enemies;
+}
 std::vector<AABB> EnemyManager::GetHitBoxes() const
 {
 	std::vector<AABB> hitboxes;

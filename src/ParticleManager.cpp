@@ -34,17 +34,15 @@ void ParticleManager::Clear()
 }
 void ParticleManager::Update()
 {
-	bool animation_complete;
-
 	for (Particle& particle : particles)
 	{
 		if (particle.IsAlive())
 		{
-			//Update animation
-			animation_complete = particle.Update();
 
-			if (animation_complete)
+			if (particle.Update())
+			{
 				particle.SetAlive(false);
+			}
 		}
 	}
 }

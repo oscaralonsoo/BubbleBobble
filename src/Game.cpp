@@ -57,7 +57,7 @@ AppStatus Game::Initialise(float scale)
     }
 
     //Initialise the fade in effect
-    fade_transition.Set(GameState::MAIN_TITLE, 60, dst);
+    fade_transition.Set(GameState::MAIN_TITLE, 30, dst);
 
     //Set the target frame rate for the application
     SetTargetFPS(60);
@@ -142,7 +142,7 @@ AppStatus Game::Update()
             if (IsKeyPressed(KEY_SPACE))
             {
                 //"state = GameState::PLAYING;" but not until halfway through the transition
-                fade_transition.Set(GameState::MAIN_TITLE, 60, GameState::MAIN_MENU, 60, dst);
+                fade_transition.Set(GameState::MAIN_TITLE, 30, GameState::MAIN_MENU, 30, dst);
             }
             break;
 

@@ -37,6 +37,9 @@ AppStatus ZenChan::Initialise(Look look, const AABB& area)
 	for (i = 0; i < 4; ++i)
 		sprite->AddKeyFrame((int)ZenChanAnim::WALKING_LEFT, { (float)i * n, 0, n, n });
 
+	sprite->SetAnimationDelay((int)ZenChanAnim::HITTED, ZENCHAN_ANIM_DELAY);
+	sprite->AddKeyFrame((int)ZenChanAnim::HITTED, { (float) 4*n, 4*n, n, n });
+
 	this->look = look;
 	if (look == Look::LEFT)        sprite->SetAnimation((int)ZenChanAnim::WALKING_LEFT);
 	else if (look == Look::RIGHT) sprite->SetAnimation((int)ZenChanAnim::WALKING_RIGHT);
@@ -65,6 +68,11 @@ bool ZenChan::Update(const AABB& box)
 		pos.x -= 7 * direction;
 		map->TestCollisionGround(GetHitbox(), &pos.y);
 
+	}
+
+	if (!IsAlive())
+	{
+		state = ZenChanState::HITTED;
 	}
 
 	if (state == ZenChanState::ROAMING)
@@ -118,6 +126,11 @@ bool ZenChan::Update(const AABB& box)
 			current_pos = 0;
 			state = ZenChanState::ROAMING;
 		}
+	}
+	else if (state == ZenChanState::HITTED)
+	{
+		SetPos({-20, -20});
+		SetAnimation((int)ZenChanAnim::HITTED);
 	}
 
 	sprite->Update();

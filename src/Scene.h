@@ -8,6 +8,7 @@
 #include "Object.h"
 #include "BubbleManager.h"
 #include "Text.h"
+#include "ParticleManager.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
@@ -40,6 +41,9 @@ private:
 
     //Shots thrown by player
     BubbleManager* bubbles;
+
+    //Particles generated from entities interactions
+    ParticleManager* particles;
 
     std::vector<Object*> objects;
     /*std::vector<Lifes*> lifes;*/
