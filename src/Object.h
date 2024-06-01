@@ -4,10 +4,16 @@
 #define OBJECT_PHYSICAL_SIZE	14
 #define OBJECT_FRAME_SIZE		16
 
-#define POINTS_BANANA	10
-#define POINTS_CHILI	20
+#define POINTS_BANANA	    500
+#define POINTS_APPLE	    700
+#define POINTS_CHERRY    	700
+#define POINTS_LEMON	    350
+#define POINTS_PEAR 	    550
+#define POINTS_WATERMELON	600
+#define POINTS_PINEAPPLE	5000
+#define POINTS_STRAWBERRY	700
 
-enum class ObjectType { BANANA, CHILI };
+enum class ObjectType { BANANA, APPLE, CHERRY, LEMON, PEAR, WATERMELON, PINEAPPLE, STRAWBERRY };
 
 class Object : public Entity
 {
