@@ -10,6 +10,8 @@ Monsta::Monsta(const Point& p, int width, int height, int frame_width, int frame
 	current_frames = 0;
 	current_pos = 0;
 	randomValue = GetRandomValue(0, 1);
+
+	direction = {1, 1};
 }
 Monsta::~Monsta()
 {
@@ -55,23 +57,8 @@ AppStatus Monsta::Initialise(Look look)
 void Monsta::Update(const AABB& box, TileMap* map)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
-	bool shoot = false;
-	Point direction;
 	
 	direction.x = (look == Look::RIGHT) ? 1 : -1;
-	direction.y = (look == Look::RIGHT) ? 1 : -1;
-
-
-	OutOfScreen();
-
-	if (map->TestCollisionCeiling(GetHitbox()))
-	{
-		pos.y -= MONSTA_OFFSET * direction.y;
-	}
-	else if (map->TestCollisionGround(GetHitbox(), &pos.y))
-	{
-		pos.y += MONSTA_OFFSET * direction.y;
-	}
 	
 	if (map->TestCollisionWallRight(GetHitbox()))
 	{
@@ -83,7 +70,10 @@ void Monsta::Update(const AABB& box, TileMap* map)
 		StartRoamingRight();
 		pos.x -= MONSTA_OFFSET * direction.x;
 	}
-	
+	else if (!map->TestFalling(GetHitbox()) || !map->TestCollisionCeiling(GetHitbox()) || pos.y < -20 || pos.y > 600)
+	{
+		direction.y *= -1;
+	}
 
 	if (!IsAlive())
 	{
@@ -92,7 +82,7 @@ void Monsta::Update(const AABB& box, TileMap* map)
 
 	if (state == MonstaState::ROAMING)
 	{
-		pos += {MONSTA_SPEED* direction.x, MONSTA_SPEED* direction.y};
+		pos += {MONSTA_SPEED * direction.x, MONSTA_SPEED * direction.y};
 		
 	}
 	else if (state == MonstaState::HITTED)

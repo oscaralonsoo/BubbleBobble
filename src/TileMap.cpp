@@ -151,7 +151,7 @@ bool TileMap::TestCollisionWallLeft(const AABB& box) const
 }
 bool TileMap::TestCollisionCeiling(const AABB& box) const
 {
-	return CollisionY(box.pos, box.height);
+	return !CollisionY(box.pos + Point(0, -box.height / 4), box.width);
 }
 bool TileMap::TestCollisionWallRight(const AABB& box) const
 {

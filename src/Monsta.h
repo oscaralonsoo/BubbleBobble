@@ -37,6 +37,8 @@ private:
 
 	MonstaState state;
 
+	Point direction;
+
 	int current_step;	//current step of the pattern
 	int current_frames;	//number of frames in the current step
 	int current_pos;	//current pos before jump

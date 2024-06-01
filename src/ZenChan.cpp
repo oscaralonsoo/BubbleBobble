@@ -141,9 +141,9 @@ void ZenChan::Update(const AABB& box, TileMap* map)
 	else if (state == ZenChanState::DIED)
 	{
 
-		if (!map->TestCollisionCeiling(GetHitbox()))
+		if (map->TestFalling(GetHitbox()))
 		{
-			pos.y += 1;
+			pos.y += ZENCHAN_SPEED;
 		}
 		else {
 

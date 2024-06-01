@@ -123,6 +123,7 @@ private:
 
 	int score;
 	int lifes;
+	int attack_delay;	//delay between attacks
 
 	Sound bubbleSound;
 	Sound bubbleJump;

@@ -6,7 +6,7 @@
 #include "ParticleManager.h"
 #include "EnemyManager.h"
 
-#define MAX_BUBBLES		16
+#define MAX_BUBBLES		100
 
 class BubbleManager
 {

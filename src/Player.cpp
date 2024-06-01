@@ -8,6 +8,7 @@
 Player::Player(const Point& p, PlayerState s, Look view) :
 	Entity(p, PLAYER_PHYSICAL_WIDTH, PLAYER_PHYSICAL_HEIGHT, PLAYER_FRAME_SIZE, PLAYER_FRAME_SIZE)
 {
+	attack_delay = 0;
 	state = s;
 	look = view;
 	jump_delay = PLAYER_JUMP_DELAY;
@@ -246,7 +247,6 @@ void Player::Update()
 				StartDeath();
 			}
 		}
-
 		MoveX();
 		MoveY();
 
@@ -301,6 +301,7 @@ void Player::MoveX()
 void Player::MoveY()
 {
 	AABB box;
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
 
 	if (state == PlayerState::JUMPING)
 	{
@@ -321,7 +322,10 @@ void Player::MoveY()
 		}
 		else
 		{
-			StartFalling();
+			if ((GetAnimation() == PlayerAnim::SHOOTING_LEFT || GetAnimation() == PlayerAnim::SHOOTING_RIGHT) && sprite->IsLastFrame())
+			{
+				StartFalling();
+			}
 		}
 	}
 }
@@ -347,13 +351,25 @@ void Player::Shoot()
 				Stop();
 			}
 		}
+
 	}
 	else
 	{
 		if (IsKeyDown(KEY_X))
 		{
-			StartShooting();
-			LogicShooting();
+			if (attack_delay == 0)
+			{
+				StartShooting();
+				LogicShooting();
+
+				attack_delay = ANIM_DELAY;
+			}
+		}
+		else {
+			if (attack_delay > 0)
+			{
+				attack_delay--;
+			}
 		}
 	}
 }

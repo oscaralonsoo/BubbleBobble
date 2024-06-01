@@ -20,7 +20,7 @@
 //Distance of suspension
 
 //Player animations delay
-#define ANIM_DELAY				10
+#define ANIM_DELAY				6
 
 
 enum class BubbleState { LAUNCHING, LEVITATING, HIT, SUSPENSION};
