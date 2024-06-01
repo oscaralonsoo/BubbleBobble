@@ -83,6 +83,20 @@ void BubbleManager::Update(const AABB& player_hitbox)
 			//Check player collision
 			if (box.TestAABB(player_hitbox) && bubble.state != BubbleState::LAUNCHING)
 			{
+				if (bubble.GetAnimation() == BubbleAnim::HIT)
+				{
+					for (Enemy* enemy : enemies)
+					{
+						if (!enemy->IsAlive())
+						{
+							enemy->SetAlive(true);
+							enemy->SetPos(bubble.GetPos());
+							enemy->KillEnemy();
+							break;
+						}
+					}
+				}
+				
 				bubble.SetAlive(false);
 				bubble.StartLaunching();
 

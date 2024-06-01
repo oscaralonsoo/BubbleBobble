@@ -6,8 +6,6 @@ Enemy::Enemy(const Point& p, int width, int height, int frame_width, int frame_h
 {
 	visibility_area = {};
 	look = Look::LEFT;
-
-	map = nullptr;
 }
 Enemy::~Enemy()
 {
@@ -34,7 +32,4 @@ void Enemy::DrawVisibilityArea(const Color& col) const
 {
 	DrawRectangleLines(visibility_area.pos.x, visibility_area.pos.y, visibility_area.width, visibility_area.height, col);
 }
-void Enemy::SetTileMap(TileMap* tilemap)
-{
-	this->map = tilemap;
-}
+void Enemy::KillEnemy() {};

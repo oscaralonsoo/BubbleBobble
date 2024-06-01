@@ -12,11 +12,18 @@
 //Horizontal speed and vertical speed while falling down
 #define BUBBLE_SPEED			7
 
+//Limits levitating
+#define BUBBLE_LIMIT_HEIGHT		85
+#define BUBBLE_MIN_CENTER		325
+#define BUBBLE_MAX_CENTER		425
+
+//Distance of suspension
+
 //Player animations delay
 #define ANIM_DELAY				10
 
 
-enum class BubbleState { LAUNCHING, LEVITATING, HIT};
+enum class BubbleState { LAUNCHING, LEVITATING, HIT, SUSPENSION};
 enum class Direction { RIGHT, LEFT };
 
 //Rendering states
@@ -37,6 +44,7 @@ public:
 	bool IsMovingLeft() const;
 	bool IsMovingRight() const;
 	void DrawDebug(const Color& col) const;
+	void SetCenter();
 
 	//Animation management
 	void SetAnimation(int id);
@@ -48,6 +56,7 @@ public:
 	//Logic management
 	void LogicLaunching();
 	void LogicLevitating();
+	void LogicSuspension();
 	void HandleStates();
 
 	AppStatus Initialise();
@@ -58,4 +67,6 @@ public:
 
 private:
 	TileMap* map;
+	int center;
+	bool isMovingUp;
 };

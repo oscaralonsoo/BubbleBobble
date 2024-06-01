@@ -1,9 +1,10 @@
 #include "EnemyManager.h"
 #include "ZenChan.h"
-//#include "Turret.h"
+#include "Monsta.h"
 
 EnemyManager::EnemyManager()
 {
+	map = nullptr;
 }
 EnemyManager::~EnemyManager()
 {
@@ -12,22 +13,23 @@ EnemyManager::~EnemyManager()
 AppStatus EnemyManager::Initialise()
 {
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_ENEMY, "images/enemy.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_ZENCHAN, "images/zenchan.png") != AppStatus::OK)
 	{
 		LOG("Failed to load enemies sprite texture");
 		return AppStatus::ERROR;
 	}
-
+	if (data.LoadTexture(Resource::IMG_MONSTA, "images/monsta.png") != AppStatus::OK)
+	{
+		LOG("Failed to load enemies sprite texture");
+		return AppStatus::ERROR;
+	}
 	return AppStatus::OK;
 }
 void EnemyManager::SetTileMap(TileMap* tilemap)
 {
-	for (Enemy* enemy : enemies)
-	{
-		enemy->SetTileMap(tilemap);
-	}
+	this->map = tilemap;
 }
-void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look look)
+void EnemyManager::Add(const Point& pos, EnemyType type, Look look)
 {
 	Enemy* enemy;
 
@@ -35,17 +37,17 @@ void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look 
 	{
 		enemy = new ZenChan(pos, ZENCHAN_PHYSICAL_WIDTH, ZENCHAN_PHYSICAL_HEIGHT, ZENCHAN_FRAME_SIZE, ZENCHAN_FRAME_SIZE);
 	}
-	/*else if (type == EnemyType::TURRET)
+	else if (type == EnemyType::MONSTA)
 	{
-		enemy = new Turret(pos, TURRET_PHYSICAL_WIDTH, TURRET_PHYSICAL_HEIGHT, TURRET_FRAME_SIZE, TURRET_FRAME_SIZE);
-	}*/
+		enemy = new Monsta(pos, MONSTA_PHYSICAL_WIDTH, MONSTA_PHYSICAL_HEIGHT, MONSTA_FRAME_SIZE, MONSTA_FRAME_SIZE);
+	}
 	else
 	{
 		LOG("Internal error: trying to add a new enemy with invalid type");
 		return;
 	}
 
-	enemy->Initialise(look, area);
+	enemy->Initialise(look);
 	enemies.push_back(enemy);
 }
 AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
@@ -56,10 +58,10 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 		width = ZENCHAN_PHYSICAL_WIDTH;
 		height = ZENCHAN_PHYSICAL_HEIGHT;
 	}
-	else if (type == EnemyType::TURRET)
+	else if (type == EnemyType::MONSTA)
 	{
-		width = TURRET_PHYSICAL_WIDTH;
-		height = TURRET_PHYSICAL_HEIGHT;
+		width = MONSTA_PHYSICAL_WIDTH;
+		height = MONSTA_PHYSICAL_HEIGHT;
 	}
 	else
 	{
@@ -89,7 +91,7 @@ void EnemyManager::Update(const AABB& player_hitbox)
 {
 	for (Enemy* enemy : enemies)
 	{
-		enemy->Update(player_hitbox);
+		enemy->Update(player_hitbox, map);
 	}
 }
 void EnemyManager::Draw() const

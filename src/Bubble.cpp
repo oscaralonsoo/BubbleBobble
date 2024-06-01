@@ -8,6 +8,8 @@ Bubble::Bubble()
 {
 	map = nullptr;
 	state = BubbleState::LAUNCHING;
+	center = 375;
+	isMovingUp = false;
 
 	int i;
 	const int n = BUBBLE_FRAME_SIZE;
@@ -65,6 +67,7 @@ void Bubble::StartLaunching()
 	{
 		state = BubbleState::LAUNCHING;
 		SetAnimation((int)BubbleAnim::LAUNCHING);
+		SetCenter();
 	}
 }
 void Bubble::StartHit()
@@ -100,6 +103,10 @@ void Bubble::HandleStates()
 	{
 		LogicLevitating();
 	}
+	else if (state == BubbleState::SUSPENSION)
+	{
+		LogicSuspension();
+	}
 }
 
 void Bubble::LogicLaunching()
@@ -116,10 +123,48 @@ void Bubble::LogicLaunching()
 		}
 	}
 }
+void Bubble::LogicSuspension()
+{
+	if (pos.y <= BUBBLE_LIMIT_HEIGHT)
+	{
+		isMovingUp = false;
+	}
 
+	if (!isMovingUp)
+	{
+		pos.y += 1;
+
+		if (pos.y >= BUBBLE_LIMIT_HEIGHT + 40)
+		{
+			isMovingUp = true;
+		}
+	}
+	else {
+		pos.y -= 1;
+	}
+}
+
+void Bubble::SetCenter()
+{
+	center = GetRandomValue(BUBBLE_MIN_CENTER, BUBBLE_MAX_CENTER);
+}
 void Bubble::LogicLevitating()
 {
-	pos.y -= 1;
+	if (pos.y > BUBBLE_LIMIT_HEIGHT)
+	{
+		pos.y -= 1;
+	}
+	else if (pos.x > center)
+	{
+		pos.x -= 1;
+	}
+	else if (pos.x < center)
+	{
+		pos.x += 1;
+	}
+	else {
+		state = BubbleState::SUSPENSION;
+	}
 }
 
 void Bubble::Release()

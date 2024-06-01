@@ -8,13 +8,13 @@
 #define ZENCHAN_PHYSICAL_WIDTH	35
 #define ZENCHAN_PHYSICAL_HEIGHT	35
 
-//Representation model size: 32x32
-#define TURRET_FRAME_SIZE		32
+//Representation model size: 48x48
+#define MONSTA_FRAME_SIZE		48
 //Logical model size: 0x0
-#define TURRET_PHYSICAL_WIDTH	32
-#define TURRET_PHYSICAL_HEIGHT	26
+#define MONSTA_PHYSICAL_WIDTH	35
+#define MONSTA_PHYSICAL_HEIGHT	35
 
-enum class EnemyType { ZENCHAN, TURRET };
+enum class EnemyType { ZENCHAN, MONSTA };
 
 class Enemy : public Entity
 {
@@ -28,16 +28,13 @@ public:
 	//Pure virtual functions, any class inheriting from this class must provide its own implementations
 
 	//Initialize the enemy with the specified look and area
-	virtual AppStatus Initialise(Look look, const AABB& area) = 0;
+	virtual AppStatus Initialise(Look look) = 0;
 
-	//Set the TileMap reference for managing enemy collisions
-	void SetTileMap(TileMap* tilemap);
+	//Set state when enemies get killed
+	virtual void KillEnemy();
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
-	virtual bool Update(const AABB& box) = 0;
-
-	//Retrieve the position and direction of the shot to be thrown
-	virtual void GetShootingPosDir(Point* pos, Point* dir) const = 0;
+	virtual void Update(const AABB& box, TileMap* tilemap) = 0;
 
 protected:
 	//Return true if the given hitbox is within the visibility area and the enemy is facing it
@@ -45,7 +42,5 @@ protected:
 
 	Look look;
 	AABB visibility_area;
-
-	TileMap* map;
 };
 

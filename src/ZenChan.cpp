@@ -14,13 +14,13 @@ ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int fra
 ZenChan::~ZenChan()
 {
 }
-AppStatus ZenChan::Initialise(Look look, const AABB& area)
+AppStatus ZenChan::Initialise(Look look)
 {
 	int i;
 	const int n = ZENCHAN_FRAME_SIZE;
 
 	ResourceManager& data = ResourceManager::Instance();
-	render = new Sprite(data.GetTexture(Resource::IMG_ENEMY));
+	render = new Sprite(data.GetTexture(Resource::IMG_ZENCHAN));
 	if (render == nullptr)
 	{
 		LOG("Failed to allocate memory for zen chan sprite");
@@ -37,6 +37,12 @@ AppStatus ZenChan::Initialise(Look look, const AABB& area)
 	for (i = 0; i < 4; ++i)
 		sprite->AddKeyFrame((int)ZenChanAnim::WALKING_LEFT, { (float)i * n, 0, n, n });
 
+	sprite->SetAnimationDelay((int)ZenChanAnim::DIED, ZENCHAN_ANIM_DELAY);
+	for (i = 2; i < 6; ++i)
+		sprite->AddKeyFrame((int)ZenChanAnim::DIED, { (float)i * n, n, n, n });
+	for (i = 0; i < 3; ++i)
+		sprite->AddKeyFrame((int)ZenChanAnim::DIED, { (float)i * n, 2 * n, n, n });
+
 	sprite->SetAnimationDelay((int)ZenChanAnim::HITTED, ZENCHAN_ANIM_DELAY);
 	sprite->AddKeyFrame((int)ZenChanAnim::HITTED, { (float) 4*n, 4*n, n, n });
 
@@ -44,14 +50,11 @@ AppStatus ZenChan::Initialise(Look look, const AABB& area)
 	if (look == Look::LEFT)        sprite->SetAnimation((int)ZenChanAnim::WALKING_LEFT);
 	else if (look == Look::RIGHT) sprite->SetAnimation((int)ZenChanAnim::WALKING_RIGHT);
 
-	visibility_area = area;
-
 	return AppStatus::OK;
 }
-bool ZenChan::Update(const AABB& box)
+void ZenChan::Update(const AABB& box, TileMap* map)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
-	bool shoot = false;
 	int direction = (look == Look::RIGHT) ? 1 : -1;
 
 	OutOfScreen();
@@ -59,43 +62,43 @@ bool ZenChan::Update(const AABB& box)
 	if (map->TestCollisionWallRight(GetHitbox()))
 	{
 		StartWalkingLeft();
-		pos.x -= 7 * direction;
+		pos.x -= ZENCHAN_OFFSET * direction;
 		map->TestCollisionGround(GetHitbox(), &pos.y);
 	}
 	if (map->TestCollisionWallLeft(GetHitbox()))
 	{
 		StartWalkingRight();
-		pos.x -= 7 * direction;
+		pos.x -= ZENCHAN_OFFSET * direction;
 		map->TestCollisionGround(GetHitbox(), &pos.y);
 
 	}
 
 	if (!IsAlive())
 	{
-		state = ZenChanState::HITTED;
+		StartHitted();
 	}
 
 	if (state == ZenChanState::ROAMING)
 	{
-		pos += {ZENCHAN_SPEED * direction, 0};
+		pos += {ZENCHAN_SPEED* direction, 0};
 
-			if (randomValue)
+		if (randomValue)
+		{
+			if (map->TestBeforeFalling(GetHitbox(), direction))
 			{
-				if (map->TestBeforeFalling(GetHitbox(), direction))
-				{
-					state = ZenChanState::JUMPING;
-					randomValue = GetRandomValue(0, 1);
-				}
+				state = ZenChanState::JUMPING;
+				randomValue = GetRandomValue(0, 1);
 			}
-			else
+		}
+		else
+		{
+			if (map->TestFalling(GetHitbox()))
 			{
-				if (map->TestFalling(GetHitbox()))
-				{
-					state = ZenChanState::FALLING;
-					randomValue = GetRandomValue(0, 1);
-				}
+				state = ZenChanState::FALLING;
+				randomValue = GetRandomValue(0, 1);
 			}
-		
+		}
+
 	}
 	else if (state == ZenChanState::FALLING)
 	{
@@ -129,13 +132,20 @@ bool ZenChan::Update(const AABB& box)
 	}
 	else if (state == ZenChanState::HITTED)
 	{
-		SetPos({-20, -20});
-		SetAnimation((int)ZenChanAnim::HITTED);
+		StartHitted();
+	}
+	else if (state == ZenChanState::DIED)
+	{
+
 	}
 
 	sprite->Update();
 
-	return shoot;
+}
+ZenChanAnim ZenChan::GetAnimation()
+{
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	return (ZenChanAnim)sprite->GetAnimation();
 }
 void ZenChan::SetAnimation(int id)
 {
@@ -147,12 +157,21 @@ void ZenChan::StartWalkingLeft()
 	look = Look::LEFT;
 	SetAnimation((int)ZenChanAnim::WALKING_LEFT);
 }
+void ZenChan::StartHitted()
+{
+	if (GetAnimation() != ZenChanAnim::HITTED)
+	{
+		SetPos({ -20, -20 });
+		SetAnimation((int)ZenChanAnim::HITTED);
+	}
+}
 void ZenChan::StartWalkingRight()
 {
 	look = Look::RIGHT;
 	SetAnimation((int)ZenChanAnim::WALKING_RIGHT);
 }
-void ZenChan::GetShootingPosDir(Point* p, Point* d) const
+void ZenChan::KillEnemy()
 {
-	
+	state = ZenChanState::DIED;
+	SetAnimation((int)ZenChanAnim::DIED);
 }

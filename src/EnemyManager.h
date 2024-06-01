@@ -14,7 +14,7 @@ public:
 	void SetTileMap(TileMap* tilemap);
 
 	//Add a new enemy with the given position, type, action area and looking direction
-	void Add(const Point& pos, EnemyType type, const AABB& area, Look look = Look::RIGHT);
+	void Add(const Point& pos, EnemyType type, Look look = Look::RIGHT);
 
 	//Retrieve the hitbox of an enemy based on the given position and type
 	AABB GetEnemyHitBox(const Point& pos, EnemyType type) const;
@@ -40,5 +40,7 @@ public:
 
 private:
 	std::vector<Enemy*> enemies;
+
+	TileMap* map;
 };
 
