@@ -226,7 +226,7 @@ AppStatus Scene::LoadLevel(int stage)
 		2, 3,  1,   1,  1,  1,  1, 19,   0,  1,   1,  1, 19,  0,  0,  0,  0,  0,  0,  0,  1,   1,   1, 19,  0,  1,  1,  1,  1,  1, 2, 3,
 		2, 3, 20,  16, 16, 16, 16, 18,   0, 17,  16, 16, 18,  0,  0,  0,  0,  0,  0,  0, 17,  16,  16, 18,  0, 17, 16, 16, 16, 16, 2, 3,
 		2, 3, 15,   0,  0,  0,  0,  0,   0,  0,   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0,  0,  0,  0,  0,  0,  0,  0, 2, 3,
-		2, 3, 15,   0,  0,  0,  0,  0,   0,  0,   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0,  0,  0,  0,  0,  0,  0,  0, 2, 3,
+		2, 3, 15,   0,  0,  50,  50,  0,   0,  0,   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0,  0,  0,  0,  0,  0,  0,  0, 2, 3,
 		2, 3, 15, 100,  0,  0,  0,  0,   0,  0,   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0,  0,  0,  0,  0,  0,  0,  0, 2, 3,
 		2, 3,  1,   1,  1,  1,  1,  1,   1, 19,   0,  0,  0,  1,  1,  1,  1,  1,  1, 19,  0,   0,   0,  1,  1,  1,  1,  1,  1,  1, 2, 3
 
@@ -292,8 +292,8 @@ AppStatus Scene::LoadLevel(int stage)
 		 8,   9,   30,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  32,   5,   5,  28,   5,  29,  31,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   8,   9,
 		 6,	  7,   30,	 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  32,   5,  30,  32,  31,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   6,   7,
 		 8,   9,   30,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  32,  31,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   8,   9,
-		 6,   7,   30,   100, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   6,   7,
-		 8,   9,   5,   5,   5,   5,   5,   5,   5,   28,   0,   0,   0,   5,   5,   5,   5,   5,   5,  28,   0,   0,   0,   5,   5,   5,   5,   5,   5,   5,   8,   9
+		 6,   7,   30, 100,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   6,   7,
+		 8,   9,    5,   5,   5,   5,   5,   5,   5,  28,   0,   0,   0,   5,   5,   5,   5,   5,   5,  28,   0,   0,   0,   5,   5,   5,   5,   5,   5,   5,   8,   9
 		};
 	}
 	else if (stage == 4)
@@ -353,12 +353,12 @@ AppStatus Scene::LoadLevel(int stage)
 				{
 					player->SetPos(pos);
 				}
-				/*else if (tile == Tile::ITEM_APPLE)
+				else if (tile == Tile::ITEM_BANANA)
 				{
-					obj = new Object(pos, ObjectType::APPLE);
+					obj = new Object(pos, ObjectType::BANANA);
 					objects.push_back(obj);
 				}
-				else if (tile == Tile::ITEM_CHILI)
+				/*else if (tile == Tile::ITEM_CHILI)
 				{
 					obj = new Object(pos, ObjectType::CHILI);
 					objects.push_back(obj);
@@ -513,7 +513,7 @@ void Scene::RenderGUI() const
 	font1->Draw(80, 10, TextFormat("1UP"), GREEN);
 	font1->Draw(80, 25, TextFormat("SCORE:%d", player->GetScore()), WHITE);
 	font1->Draw(600, 10, TextFormat("2UP"), BLUE);
-	font1->Draw(600, 25, TextFormat("SCORE:%d", player->GetScore()), WHITE);
+	font1->Draw(600, 25, TextFormat("SCORE:"), WHITE);
 	font1->Draw(310, 20, TextFormat("HIGH SCORE"), RED);
 	
 

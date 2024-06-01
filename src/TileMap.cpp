@@ -24,6 +24,7 @@ void TileMap::InitTileDictionary()
 {
 	const int n = TILE_SIZE;
 
+
 //LVL 3
 
 	dict_rect[(int)Tile::BLOCK_SQUARE1] = { n,  0, n, n };
