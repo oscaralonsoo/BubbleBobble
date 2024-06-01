@@ -59,19 +59,23 @@ void ZenChan::Update(const AABB& box, TileMap* map)
 
 	OutOfScreen();
 
-	if (map->TestCollisionWallRight(GetHitbox()))
+	if (state != ZenChanState::DIED)
 	{
-		StartWalkingLeft();
-		pos.x -= ZENCHAN_OFFSET * direction;
-		map->TestCollisionGround(GetHitbox(), &pos.y);
-	}
-	if (map->TestCollisionWallLeft(GetHitbox()))
-	{
-		StartWalkingRight();
-		pos.x -= ZENCHAN_OFFSET * direction;
-		map->TestCollisionGround(GetHitbox(), &pos.y);
+		if (map->TestCollisionWallRight(GetHitbox()))
+		{
+			StartWalkingLeft();
+			pos.x -= ZENCHAN_OFFSET * direction;
+			map->TestCollisionGround(GetHitbox(), &pos.y);
+		}
+		if (map->TestCollisionWallLeft(GetHitbox()))
+		{
+			StartWalkingRight();
+			pos.x -= ZENCHAN_OFFSET * direction;
+			map->TestCollisionGround(GetHitbox(), &pos.y);
 
+		}
 	}
+	
 
 	if (!IsAlive())
 	{
@@ -137,6 +141,13 @@ void ZenChan::Update(const AABB& box, TileMap* map)
 	else if (state == ZenChanState::DIED)
 	{
 
+		if (!map->TestCollisionCeiling(GetHitbox()))
+		{
+			pos.y += 1;
+		}
+		else {
+
+		}
 	}
 
 	sprite->Update();

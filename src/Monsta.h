@@ -8,9 +8,9 @@
 #define MONSTA_JUMP_SPEED      1
 #define MONSTA_OFFSET          7   //offset colliders for avoid bugs
 
-enum class MonstaState { ROAMING, JUMPING, FALLING, HITTED, DIED };
+enum class MonstaState { ROAMING, HITTED, DIED };
 enum class MonstaAnim {
-	WALKING_LEFT, WALKING_RIGHT, HITTED, DIED,
+	ROAMING_LEFT, ROAMING_RIGHT, HITTED, DIED,
 	NUM_ANIMATIONS
 };
 
@@ -30,8 +30,8 @@ private:
 	//Animation management
 	MonstaAnim GetAnimation();
 	void SetAnimation(int id);
-	void StartWalkingLeft();
-	void StartWalkingRight();
+	void StartRoamingLeft();
+	void StartRoamingRight();
 	void KillEnemy();
 	void StartHitted();
 
