@@ -28,7 +28,7 @@ enum class Direction { RIGHT, LEFT };
 
 //Rendering states
 enum class BubbleAnim {
-	LAUNCHING, LEVITATING, HIT,
+	LAUNCHING, LEVITATING, HIT_ZENCHAN, HIT_MONSTA,
 	NUM_ANIMATIONS
 };
 
@@ -50,7 +50,7 @@ public:
 	void SetAnimation(int id);
 	BubbleAnim GetAnimation();
 	void StartLaunching();
-	void StartHit();
+	void StartHit(int type);
 	void StartLevitating();
 
 	//Logic management

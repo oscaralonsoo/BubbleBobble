@@ -18,7 +18,7 @@ enum class MonstaAnim {
 class Monsta : public Enemy
 {
 public:
-	Monsta(const Point& p, int width, int height, int frame_width, int frame_height);
+	Monsta(const Point& p, int width, int height, int frame_width, int frame_height, int type);
 	~Monsta();
 
 	//Initialize the enemy with the specified look and area
@@ -26,6 +26,8 @@ public:
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
 	void Update(std::vector<Object*> objects, TileMap* map) override;
+
+	int GetType();
 
 private:
 	//Animation management

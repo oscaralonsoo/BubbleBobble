@@ -29,9 +29,13 @@ Bubble::Bubble()
 	for (i = 0; i < 5; ++i)
 		sprite->AddKeyFrame((int)BubbleAnim::LAUNCHING, { (float)i * n, 0, n, n });
 
-	sprite->SetAnimationDelay((int)BubbleAnim::HIT, 10);
+	sprite->SetAnimationDelay((int)BubbleAnim::HIT_ZENCHAN, 10);
 	for (i = 2; i < 5; ++i)
-		sprite->AddKeyFrame((int)BubbleAnim::HIT, { (float)i * n, n, n, n });
+		sprite->AddKeyFrame((int)BubbleAnim::HIT_ZENCHAN, { (float)i * n, n, n, n });
+
+	sprite->SetAnimationDelay((int)BubbleAnim::HIT_MONSTA, 10);
+	for (i = 2; i < 5; ++i)
+		sprite->AddKeyFrame((int)BubbleAnim::HIT_MONSTA, { (float)i * n, 2*n, n, n });
 
 	SetAlive(false);
 }
@@ -70,10 +74,19 @@ void Bubble::StartLaunching()
 		SetCenter();
 	}
 }
-void Bubble::StartHit()
+void Bubble::StartHit(int type)
 {
 	state = BubbleState::LEVITATING;
-	SetAnimation((int)BubbleAnim::HIT);
+
+	if (type == 0)
+	{
+		SetAnimation((int)BubbleAnim::HIT_ZENCHAN);
+	}
+	else if (type == 1)
+	{
+		SetAnimation((int)BubbleAnim::HIT_MONSTA);
+	}
+	
 	
 }
 void Bubble::StartLevitating()

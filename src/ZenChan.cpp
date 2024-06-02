@@ -1,7 +1,7 @@
 #include "ZenChan.h"
 #include "Sprite.h"
 
-ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int frame_height) :
+ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int frame_height, int type) :
 	Enemy(p, width, height, frame_width, frame_height)
 {
 	state = ZenChanState::ROAMING;
@@ -10,6 +10,7 @@ ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int fra
 	current_frames = 0;
 	current_pos = 0;
 	randomValue = GetRandomValue(0, 1);
+	this->type = type;
 }
 ZenChan::~ZenChan()
 {
@@ -169,6 +170,10 @@ ZenChanAnim ZenChan::GetAnimation()
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	return (ZenChanAnim)sprite->GetAnimation();
+}
+int ZenChan::GetType()
+{
+	return type;
 }
 void ZenChan::SetAnimation(int id)
 {

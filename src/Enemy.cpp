@@ -39,3 +39,6 @@ int Enemy::GetAnimation()
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	return sprite->GetAnimation();
 }
+int Enemy::GetType() {
+	return type;
+}

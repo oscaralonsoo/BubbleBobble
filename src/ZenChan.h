@@ -25,7 +25,7 @@ struct Step
 class ZenChan : public Enemy
 {
 public:
-	ZenChan(const Point& p, int width, int height, int frame_width, int frame_height);
+	ZenChan(const Point& p, int width, int height, int frame_width, int frame_height, int type);
 	~ZenChan();
 
 	//Initialize the enemy with the specified look and area
@@ -34,6 +34,7 @@ public:
 	//Update the enemy according to its logic, return true if the enemy must shoot
 	void Update(std::vector<Object*> objects, TileMap* tilemap) override;
 
+	int GetType();
 private:
 	//Animation management
 	ZenChanAnim GetAnimation();

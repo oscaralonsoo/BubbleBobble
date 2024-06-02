@@ -35,11 +35,11 @@ void EnemyManager::Add(const Point& pos, EnemyType type, Look look)
 
 	if (type == EnemyType::ZENCHAN)
 	{
-		enemy = new ZenChan(pos, ZENCHAN_PHYSICAL_WIDTH, ZENCHAN_PHYSICAL_HEIGHT, ZENCHAN_FRAME_SIZE, ZENCHAN_FRAME_SIZE);
+		enemy = new ZenChan(pos, ZENCHAN_PHYSICAL_WIDTH, ZENCHAN_PHYSICAL_HEIGHT, ZENCHAN_FRAME_SIZE, ZENCHAN_FRAME_SIZE, (int)EnemyType::ZENCHAN);
 	}
 	else if (type == EnemyType::MONSTA)
 	{
-		enemy = new Monsta(pos, MONSTA_PHYSICAL_WIDTH, MONSTA_PHYSICAL_HEIGHT, MONSTA_FRAME_SIZE, MONSTA_FRAME_SIZE);
+		enemy = new Monsta(pos, MONSTA_PHYSICAL_WIDTH, MONSTA_PHYSICAL_HEIGHT, MONSTA_FRAME_SIZE, MONSTA_FRAME_SIZE, (int)EnemyType::MONSTA);
 	}
 	else
 	{

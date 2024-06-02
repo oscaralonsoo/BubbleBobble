@@ -67,14 +67,14 @@ void BubbleManager::Update(const AABB& player_hitbox)
 				{
 					bubble.SetPos(enemy->GetPos());
 					enemy->SetAlive(false);
-					bubble.StartHit();
+					bubble.StartHit(enemy->GetType());
 				}
 			}
 
 			//Check wall collision
 			if (bubble.IsMovingRight() && map->TestCollisionWallRight(box) || bubble.IsMovingLeft() && map->TestCollisionWallLeft(box))
 			{
-				if (bubble.GetAnimation() != BubbleAnim::HIT)
+				if (bubble.GetAnimation() != BubbleAnim::HIT_ZENCHAN && bubble.GetAnimation() != BubbleAnim::HIT_MONSTA)
 				{
 					bubble.StartLevitating();
 				}
@@ -83,7 +83,7 @@ void BubbleManager::Update(const AABB& player_hitbox)
 			//Check player collision
 			if (box.TestAABB(player_hitbox) && bubble.state != BubbleState::LAUNCHING)
 			{
-				if (bubble.GetAnimation() == BubbleAnim::HIT)
+				if (bubble.GetAnimation() == BubbleAnim::HIT_ZENCHAN || bubble.GetAnimation() == BubbleAnim::HIT_MONSTA)
 				{
 					for (Enemy* enemy : enemies)
 					{

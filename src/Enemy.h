@@ -33,6 +33,9 @@ public:
 
 	//Set state when enemies get killed
 	virtual void KillEnemy();
+	
+	//Set state when enemies get killed
+	virtual int GetType();
 
 	int GetAnimation();
 
@@ -42,6 +45,8 @@ public:
 protected:
 	//Return true if the given hitbox is within the visibility area and the enemy is facing it
 	bool IsVisible(const AABB& hitbox);
+
+	int type;
 
 	Look look;
 	AABB visibility_area;

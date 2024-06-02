@@ -1,7 +1,7 @@
 #include "Monsta.h"
 #include "Sprite.h"
 
-Monsta::Monsta(const Point& p, int width, int height, int frame_width, int frame_height) :
+Monsta::Monsta(const Point& p, int width, int height, int frame_width, int frame_height, int type) :
 	Enemy(p, width, height, frame_width, frame_height)
 {
 	state = MonstaState::ROAMING;
@@ -10,6 +10,7 @@ Monsta::Monsta(const Point& p, int width, int height, int frame_width, int frame
 	current_frames = 0;
 	current_pos = 0;
 	randomValue = GetRandomValue(0, 1);
+	this->type = type;
 
 	direction = {1, 1};
 }
@@ -120,6 +121,10 @@ MonstaAnim Monsta::GetAnimation()
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	return (MonstaAnim)sprite->GetAnimation();
+}
+int Monsta::GetType()
+{
+	return type;
 }
 void Monsta::SetAnimation(int id)
 {
