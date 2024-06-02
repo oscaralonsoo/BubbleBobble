@@ -72,6 +72,7 @@ void Monsta::Update(const AABB& box, TileMap* map)
 	}
 	else if (!map->TestFalling(GetHitbox()) || !map->TestCollisionCeiling(GetHitbox()) || pos.y < -20 || pos.y > 600)
 	{
+		pos.y -= 5 * direction.y;
 		direction.y *= -1;
 	}
 

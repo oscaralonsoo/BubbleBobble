@@ -6,7 +6,7 @@
 #define MONSTA_ANIM_DELAY	(4*ANIM_DELAY)
 #define MONSTA_JUMP_HEIGHT     20
 #define MONSTA_JUMP_SPEED      1
-#define MONSTA_OFFSET          7   //offset colliders for avoid bugs
+#define MONSTA_OFFSET          1   //offset colliders for avoid bugs
 
 enum class MonstaState { ROAMING, HITTED, DIED };
 enum class MonstaAnim {
