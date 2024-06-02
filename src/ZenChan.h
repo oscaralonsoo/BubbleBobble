@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "TileMap.h"
+#include "Object.h"
 
 #define ZENCHAN_SPEED			3
 #define ZENCHAN_ANIM_DELAY	(4*ANIM_DELAY)
