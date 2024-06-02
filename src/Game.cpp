@@ -7,9 +7,6 @@ Game::Game()
 {
     state = GameState::MAIN_TITLE;
     scene = nullptr;
-    img_menu = nullptr;
-    img_title = nullptr;
-
 
     target = {};
     src = {};
@@ -34,9 +31,9 @@ AppStatus Game::Initialise(float scale)
     InitWindow((int)w, (int)h, "Bubble Bobble");
 
     //Initialise audio
-    /*InitAudioDevice();
+    InitAudioDevice();
     Sound  music = LoadSound("Music/introduction.ogg");
-    PlaySound(music);*/
+    PlaySound(music);
 
     //Render texture initialisation, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -87,6 +84,12 @@ AppStatus Game::LoadResources()
         return AppStatus::ERROR;
     }
     img_menu = data.GetTexture(Resource::IMG_MENU);
+
+    if (data.LoadTexture(Resource::IMG_WIN, "images/win.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_win = data.GetTexture(Resource::IMG_WIN);
     
     return AppStatus::OK;
 
@@ -166,6 +169,11 @@ AppStatus Game::Update()
                 FinishPlay();
                 state = GameState::LOOSE;
             }
+            else if (scene->Win())
+            {
+                FinishPlay();
+                state = GameState::WIN;
+            }
             else
             {
                 //Game logic
@@ -179,7 +187,14 @@ AppStatus Game::Update()
                 state = GameState::MAIN_MENU;
             }
             break;
-        }
+        case GameState::WIN:
+            if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                state = GameState::MAIN_MENU;
+            }
+            break;
+    }
     }
     
     return AppStatus::OK;
@@ -206,6 +221,10 @@ void Game::Render()
 
         case GameState::LOOSE:
             DrawTexture(*img_loose, 0, 0, WHITE);
+            break;
+
+        case GameState::WIN:
+            DrawTexture(*img_win, 0, 0, WHITE);
             break;
     }
     

@@ -16,7 +16,9 @@ enum class Resource {
     IMG_LIFES,
     IMG_ZENCHAN,
     IMG_MONSTA,
-    IMG_TEXT
+    IMG_TEXT,
+    IMG_FRUITS,
+    IMG_WIN
 };
 
 class ResourceManager {

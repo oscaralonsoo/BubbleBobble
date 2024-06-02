@@ -9,7 +9,7 @@
 #define ZENCHAN_JUMP_SPEED      1
 #define ZENCHAN_OFFSET          7   //offset colliders for avoid bugs
 
-enum class ZenChanState { ROAMING, JUMPING, FALLING, HITTED, DIED };
+enum class ZenChanState { ROAMING, JUMPING, DIED, FALLING, HITTED};
 enum class ZenChanAnim {
 	WALKING_LEFT, WALKING_RIGHT, HITTED, DIED,
 	NUM_ANIMATIONS
@@ -32,7 +32,7 @@ public:
 	AppStatus Initialise(Look look) override;
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
-	void Update(const AABB& box, TileMap* tilemap) override;
+	void Update(std::vector<Object*> objects, TileMap* tilemap) override;
 
 private:
 	//Animation management
@@ -45,6 +45,8 @@ private:
 
 	ZenChanState state;
 
+	Object* obj;
+	
 	int current_step;	//current step of the pattern
 	int current_frames;	//number of frames in the current step
 	int current_pos;	//current pos before jump

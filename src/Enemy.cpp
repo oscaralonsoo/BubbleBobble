@@ -33,3 +33,9 @@ void Enemy::DrawVisibilityArea(const Color& col) const
 	DrawRectangleLines(visibility_area.pos.x, visibility_area.pos.y, visibility_area.width, visibility_area.height, col);
 }
 void Enemy::KillEnemy() {};
+
+int Enemy::GetAnimation()
+{
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	return sprite->GetAnimation();
+}

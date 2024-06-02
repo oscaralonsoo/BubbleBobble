@@ -91,10 +91,6 @@ void Player::SetShotManager(BubbleManager* bubbles)
 {
 	this->bubbles = bubbles;
 }
-void Player::SetEnemiesHitbox(std::vector<AABB> hitboxes)
-{
-	this->enemies_hitbox = hitboxes;
-}
 void Player::InitScore()
 {
 	score = 0;
@@ -138,6 +134,10 @@ bool Player::IsAscending() const
 bool Player::IsDescending() const
 {
 	return dir.y > PLAYER_LEVITATING_SPEED;
+}
+void Player::SetEnemies(std::vector<Enemy*> enemies)
+{
+	this->enemies = enemies;
 }
 void Player::SetAnimation(int id)
 {
@@ -199,7 +199,7 @@ void Player::StartDeath()
 	if (GetAnimation() != PlayerAnim::DEAD_LEFT && GetAnimation() != PlayerAnim::DEAD_RIGHT)
 	{
 		state = PlayerState::DEAD;
-		//DecrLifes();
+		DecrLifes();
 		if (IsLookingRight())	SetAnimation((int)PlayerAnim::DEAD_RIGHT);
 		else					SetAnimation((int)PlayerAnim::DEAD_LEFT);
 	}
@@ -240,9 +240,9 @@ void Player::Update()
 	}
 	else
 	{
-		for (AABB hitbox : enemies_hitbox)
+		for (Enemy* enemy : enemies)
 		{
-			if (GetHitbox().TestAABB(hitbox))
+			if (GetHitbox().TestAABB(enemy->GetHitbox()) && enemy->GetAnimation() != 3)
 			{
 				StartDeath();
 			}

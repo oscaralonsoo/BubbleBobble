@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "TileMap.h"
+#include "Object.h";
 
 class EnemyManager
 {
@@ -27,7 +28,7 @@ public:
 
 	//Update enemies according to their logic. If the given player hitbox is visible to them,
 	//they will shoot by adding shots to the ShotManager
-	void Update(const AABB& player_hitbox);
+	void Update(std::vector<Object*> objects);
 
 	//Draw all enemies
 	void Draw() const;

@@ -65,7 +65,8 @@ public:
 	//Set the ShotManager reference for managing enemy shots
 	void SetShotManager(BubbleManager* bubbles);
 
-	void SetEnemiesHitbox(std::vector<AABB> hitboxes);
+	//Set the enemies for interactions
+	void SetEnemies(std::vector<Enemy*> enemies);
 
 	void SetTileMap(TileMap* tilemap);
 
@@ -113,8 +114,8 @@ private:
 	//This class does not own the object, it only holds a reference to it
 	BubbleManager* bubbles;
 
-	//Array of all the hitboxes of the enemies in the scene
-	std::vector<AABB> enemies_hitbox;
+	//Array of all the enemies in the scene
+	std::vector<Enemy*> enemies;
 
 	PlayerState state;
 	Look look;

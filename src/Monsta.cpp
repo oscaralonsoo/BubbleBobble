@@ -39,11 +39,9 @@ AppStatus Monsta::Initialise(Look look)
 	for (i = 0; i < 2; ++i)
 		sprite->AddKeyFrame((int)MonstaAnim::ROAMING_LEFT, { (float)i * n, 0, n, n });
 
-	sprite->SetAnimationDelay((int)MonstaAnim::DIED, MONSTA_ANIM_DELAY);
-	for (i = 2; i < 6; ++i)
+	sprite->SetAnimationDelay((int)MonstaAnim::DIED, 8);
+	for (i = 1; i < 5; ++i)
 		sprite->AddKeyFrame((int)MonstaAnim::DIED, { (float)i * n, n, n, n });
-	for (i = 0; i < 3; ++i)
-		sprite->AddKeyFrame((int)MonstaAnim::DIED, { (float)i * n, 2 * n, n, n });
 
 	sprite->SetAnimationDelay((int)MonstaAnim::HITTED, MONSTA_ANIM_DELAY);
 	sprite->AddKeyFrame((int)MonstaAnim::HITTED, { (float) 4*n, 4*n, n, n });
@@ -54,28 +52,30 @@ AppStatus Monsta::Initialise(Look look)
 
 	return AppStatus::OK;
 }
-void Monsta::Update(const AABB& box, TileMap* map)
+void Monsta::Update(std::vector<Object*> objects, TileMap* map)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	
 	direction.x = (look == Look::RIGHT) ? 1 : -1;
 	
-	if (map->TestCollisionWallRight(GetHitbox()))
+	if (sprite->GetAnimation() != (int)MonstaAnim::DIED)
 	{
-		StartRoamingLeft();
-		pos.x -= MONSTA_OFFSET * direction.x;
+		if (map->TestCollisionWallRight(GetHitbox()))
+		{
+			StartRoamingLeft();
+			pos.x -= MONSTA_OFFSET * direction.x;
+		}
+		else if (map->TestCollisionWallLeft(GetHitbox()))
+		{
+			StartRoamingRight();
+			pos.x -= MONSTA_OFFSET * direction.x;
+		}
+		else if (!map->TestFalling(GetHitbox()) || !map->TestCollisionCeiling(GetHitbox()) || pos.y < -20 || pos.y > 600)
+		{
+			pos.y -= 5 * direction.y;
+			direction.y *= -1;
+		}
 	}
-	else if (map->TestCollisionWallLeft(GetHitbox()))
-	{
-		StartRoamingRight();
-		pos.x -= MONSTA_OFFSET * direction.x;
-	}
-	else if (!map->TestFalling(GetHitbox()) || !map->TestCollisionCeiling(GetHitbox()) || pos.y < -20 || pos.y > 600)
-	{
-		pos.y -= 5 * direction.y;
-		direction.y *= -1;
-	}
-
 	if (!IsAlive())
 	{
 		StartHitted();
@@ -92,7 +92,26 @@ void Monsta::Update(const AABB& box, TileMap* map)
 	}
 	else if (state == MonstaState::DIED)
 	{
+		if (map->TestFalling(GetHitbox()))
+		{
+			pos.y += MONSTA_SPEED;
+		}
+		else {
+			if (IsAlive())
+			{
+				alive = false;
 
+				for (Object* obj : objects)
+				{
+					if (!obj->IsAlive())
+					{
+						obj->SetAlive(true);
+						obj->SetPos(pos);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	sprite->Update();

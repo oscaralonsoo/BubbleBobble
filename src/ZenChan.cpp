@@ -5,7 +5,7 @@ ZenChan::ZenChan(const Point& p, int width, int height, int frame_width, int fra
 	Enemy(p, width, height, frame_width, frame_height)
 {
 	state = ZenChanState::ROAMING;
-
+	obj = new Object(pos, ObjectType::APPLE);
 	current_step = 0;
 	current_frames = 0;
 	current_pos = 0;
@@ -37,9 +37,8 @@ AppStatus ZenChan::Initialise(Look look)
 	for (i = 0; i < 4; ++i)
 		sprite->AddKeyFrame((int)ZenChanAnim::WALKING_LEFT, { (float)i * n, 0, n, n });
 
-	sprite->SetAnimationDelay((int)ZenChanAnim::DIED, ZENCHAN_ANIM_DELAY);
-	for (i = 2; i < 6; ++i)
-		sprite->AddKeyFrame((int)ZenChanAnim::DIED, { (float)i * n, n, n, n });
+	sprite->SetAnimationDelay((int)ZenChanAnim::DIED, 8);
+	sprite->AddKeyFrame((int)ZenChanAnim::DIED, { (float)5 * n, n, n, n });
 	for (i = 0; i < 3; ++i)
 		sprite->AddKeyFrame((int)ZenChanAnim::DIED, { (float)i * n, 2 * n, n, n });
 
@@ -52,7 +51,7 @@ AppStatus ZenChan::Initialise(Look look)
 
 	return AppStatus::OK;
 }
-void ZenChan::Update(const AABB& box, TileMap* map)
+void ZenChan::Update(std::vector<Object*> objects, TileMap* map)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	int direction = (look == Look::RIGHT) ? 1 : -1;
@@ -146,8 +145,20 @@ void ZenChan::Update(const AABB& box, TileMap* map)
 			pos.y += ZENCHAN_SPEED;
 		}
 		else {
-			new Object(pos, ObjectType::BANANA);
-			alive = false;
+			if (IsAlive())
+			{
+				alive = false;
+				
+				for (Object* obj : objects)
+				{
+					if (!obj->IsAlive())
+					{
+						obj->SetAlive(true);
+						obj->SetPos(pos);
+						break;
+					}
+				}
+			}
 		}
 	}
 

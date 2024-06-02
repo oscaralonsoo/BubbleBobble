@@ -1,8 +1,8 @@
 #pragma once
 #include "Entity.h"
 
-#define OBJECT_PHYSICAL_SIZE	14
-#define OBJECT_FRAME_SIZE		16
+#define OBJECT_PHYSICAL_SIZE	32
+#define OBJECT_FRAME_SIZE		32
 
 #define POINTS_BANANA	    500
 #define POINTS_APPLE	    700

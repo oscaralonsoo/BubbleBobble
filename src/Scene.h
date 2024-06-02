@@ -22,6 +22,7 @@ public:
     void Update();
     void Render();
     void Release();
+    bool Win();
 
     Player* player;
 
@@ -48,6 +49,8 @@ private:
     std::vector<Object*> objects;
     /*std::vector<Lifes*> lifes;*/
     TileMap* level;
+
+    int current_stage;
 
     Camera2D camera;
     DebugMode debug;

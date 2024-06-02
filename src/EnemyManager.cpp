@@ -87,11 +87,11 @@ std::vector<AABB> EnemyManager::GetHitBoxes() const
 
 	return hitboxes;
 }
-void EnemyManager::Update(const AABB& player_hitbox)
+void EnemyManager::Update(std::vector<Object*> objects)
 {
 	for (Enemy* enemy : enemies)
 	{
-		enemy->Update(player_hitbox, map);
+		enemy->Update(objects, map);
 	}
 }
 void EnemyManager::Draw() const

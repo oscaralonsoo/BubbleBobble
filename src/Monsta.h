@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "TileMap.h"
+#include "Object.h";
 
 #define MONSTA_SPEED			3
 #define MONSTA_ANIM_DELAY	(4*ANIM_DELAY)
@@ -24,7 +25,7 @@ public:
 	AppStatus Initialise(Look look) override;
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
-	void Update(const AABB& box, TileMap* map) override;
+	void Update(std::vector<Object*> objects, TileMap* map) override;
 
 private:
 	//Animation management

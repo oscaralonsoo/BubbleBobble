@@ -6,23 +6,25 @@ Object::Object(const Point& p, ObjectType t) : Entity(p, OBJECT_PHYSICAL_SIZE, O
 	type = t; 
 	
 	Rectangle rc;
-	const int n = TILE_SIZE;
+	const int n = OBJECT_FRAME_SIZE;
 	switch (type)
 	{
-		case ObjectType::BANANA: rc = {5*n, 0, n, n}; break;
-		case ObjectType::APPLE: rc = {0, 8 * n, n, n}; break;
-		case ObjectType::CHERRY: rc = { n, 8 * n, n, n }; break;
-		case ObjectType::LEMON: rc = { 2 * n, 8 * n, n, n }; break;
-		case ObjectType::PEAR: rc = { 3 * n, 8 * n, n, n }; break;
-		case ObjectType::WATERMELON: rc = { 4 * n, 8 * n, n, n }; break;
-		case ObjectType::PINEAPPLE: rc = { 5 * n, 8 * n, n, n }; break;
-		case ObjectType::STRAWBERRY: rc = { 0, 9 * n, n, n }; break;
+		case ObjectType::BANANA: rc = {3*n, 0, n, n}; break;
+		case ObjectType::APPLE: rc = {0, 0, n, n}; break;
+		case ObjectType::CHERRY: rc = { n, 0, n, n }; break;
+		case ObjectType::LEMON: rc = { 2 * n, 0, n, n }; break;
+		case ObjectType::PEAR: rc = { 0, n, n, n }; break;
+		case ObjectType::WATERMELON: rc = { n, n, n, n }; break;
+		case ObjectType::PINEAPPLE: rc = { 3*n, n, n, n }; break;
+		case ObjectType::STRAWBERRY: rc = { 2*n, n, n, n }; break;
 
 		default: LOG("Internal error: object creation of invalid type");
 	}
 
 	ResourceManager& data = ResourceManager::Instance();
-	render = new StaticImage(data.GetTexture(Resource::IMG_TILES), rc);
+	data.LoadTexture(Resource::IMG_FRUITS, "images/fruits.png");
+
+	render = new StaticImage(data.GetTexture(Resource::IMG_FRUITS), rc);
 }
 Object::~Object()
 {
@@ -33,13 +35,13 @@ void Object::DrawDebug(const Color& col) const
 }
 int Object::Points() const
 {
-	if (type == ObjectType::BANANA)		return POINTS_BANANA;
-	else if (type == ObjectType::APPLE)	return POINTS_APPLE;
-	if (type == ObjectType::CHERRY)		return POINTS_CHERRY;
-	else if (type == ObjectType::LEMON)	return POINTS_LEMON;
-	if (type == ObjectType::PEAR)		return POINTS_PEAR;
+	if (type == ObjectType::BANANA)				return POINTS_BANANA;
+	else if (type == ObjectType::APPLE)			return POINTS_APPLE;
+	if (type == ObjectType::CHERRY)				return POINTS_CHERRY;
+	else if (type == ObjectType::LEMON)			return POINTS_LEMON;
+	if (type == ObjectType::PEAR)				return POINTS_PEAR;
 	else if (type == ObjectType::WATERMELON)	return POINTS_WATERMELON;
-	if (type == ObjectType::PINEAPPLE)		return POINTS_PINEAPPLE;
+	if (type == ObjectType::PINEAPPLE)			return POINTS_PINEAPPLE;
 	else if (type == ObjectType::STRAWBERRY)	return POINTS_STRAWBERRY;
 	else
 	{

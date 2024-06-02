@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "TileMap.h"
+#include "Object.h";
 
 //Representation model size: 48x48
 #define ZENCHAN_FRAME_SIZE		48
@@ -33,8 +34,10 @@ public:
 	//Set state when enemies get killed
 	virtual void KillEnemy();
 
+	int GetAnimation();
+
 	//Update the enemy according to its logic, return true if the enemy must shoot
-	virtual void Update(const AABB& box, TileMap* tilemap) = 0;
+	virtual void Update(std::vector<Object*> objects, TileMap* tilemap) = 0;
 
 protected:
 	//Return true if the given hitbox is within the visibility area and the enemy is facing it

@@ -15,6 +15,7 @@ Scene::Scene()
 	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
 	camera.rotation = 0.0f;					//No rotation
 	camera.zoom = 1.0f;						//Default zoom
+	current_stage = 0;
 
 	debug = DebugMode::OFF;
 }
@@ -195,6 +196,8 @@ AppStatus Scene::LoadLevel(int stage)
 	Object* obj;
 	AABB hitbox;
 	
+	current_stage = stage;
+
 	ClearLevel();
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
@@ -396,15 +399,22 @@ AppStatus Scene::LoadLevel(int stage)
 					pos.x += (ZENCHAN_FRAME_SIZE - ZENCHAN_PHYSICAL_WIDTH) / 2;
 					enemies->Add(pos, EnemyType::ZENCHAN);
 
+					obj = new Object({0, 0}, (ObjectType)GetRandomValue(0, 7));
+					obj->SetAlive(false);
+					objects.push_back(obj);
 				}
 				else if (tile == Tile::MONSTA)
 				{
 					pos.x += (MONSTA_FRAME_SIZE - MONSTA_PHYSICAL_WIDTH) / 2;
 					enemies->Add(pos, EnemyType::MONSTA);
+
+					obj = new Object({ 0, 0 }, (ObjectType)GetRandomValue(0, 7));
+					obj->SetAlive(false);
+					objects.push_back(obj);
 				}
 				else
 				{
-					LOG("Internal error loading scene: invalid entity or object tile id")
+					LOG("Internal error loading scene: invalid entity or object tile id");
 				}
 			}
 			++i;
@@ -432,6 +442,12 @@ void Scene::Update()
 	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
 	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
 
+	//Pass to the next level
+	if (objects.empty())
+	{
+		LoadLevel(++current_stage);
+	}
+
 	level->Update();
 	player->Update();
 
@@ -439,7 +455,7 @@ void Scene::Update()
 	CheckEnemiesCollisions();
 
 	hitbox = player->GetHitbox();
-	enemies->Update(hitbox);
+	enemies->Update(objects);
 	bubbles->Update(hitbox);
 	particles->Update();
 }
@@ -467,6 +483,10 @@ void Scene::Render()
 	EndMode2D();
 
 	RenderGUI();
+}
+bool Scene::Win()
+{
+	return current_stage > 4;
 }
 void Scene::Release()
 {
@@ -502,7 +522,7 @@ void Scene::CheckObjectCollisions()
 }
 void Scene::CheckEnemiesCollisions()
 {
-	player->SetEnemiesHitbox(enemies->GetHitBoxes());
+	player->SetEnemies(enemies->GetEnemies());
 	bubbles->SetEnemies(enemies->GetEnemies());
 }
 void Scene::ClearLevel()
@@ -520,7 +540,10 @@ void Scene::RenderObjects() const
 {
 	for (Object* obj : objects)
 	{
-		obj->Draw();
+		if (obj->IsAlive())
+		{
+			obj->Draw();
+		}
 	}
 }
 void Scene::RenderObjectsDebug(const Color& col) const
