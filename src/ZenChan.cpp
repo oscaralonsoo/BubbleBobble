@@ -146,7 +146,8 @@ void ZenChan::Update(const AABB& box, TileMap* map)
 			pos.y += ZENCHAN_SPEED;
 		}
 		else {
-
+			new Object(pos, ObjectType::BANANA);
+			alive = false;
 		}
 	}
 
