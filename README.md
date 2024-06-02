@@ -15,7 +15,7 @@ The game was designed around two-player gameplay, so by inserting another coin, 
 
 ## Gameplay
 
-/*iframe width="740" height="590" src="" frameborder="0" allowfullscreen></iframe>*/
+### Video of the gamplay [HERE](https://youtu.be/WUhKDdWZGmU)
 
 ## Controls
 ~~~~~~~~~~~~~~~
@@ -49,7 +49,7 @@ _David Subirats Bonet_
 
 
 ### For more information see our wiki page [HERE](https://github.com/oscaralonsoo/BubbleBobble/wiki)
-### Download the last version of the game [HERE]()
+### Download the last version of the game [HERE](https://github.com/oscaralonsoo/BubbleBobble/releases/tag/v1.0)
 ### Check our Github repository [HERE](https://github.com/oscaralonsoo/BubbleBobble)
 
 
