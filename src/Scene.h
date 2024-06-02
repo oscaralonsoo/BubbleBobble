@@ -47,7 +47,8 @@ private:
     ParticleManager* particles;
 
     std::vector<Object*> objects;
-    /*std::vector<Lifes*> lifes;*/
+    std::vector<Lifes*> lifes;
+
     TileMap* level;
 
     int current_stage;

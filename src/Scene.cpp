@@ -59,6 +59,12 @@ Scene::~Scene()
 		delete obj;
 	}
 	objects.clear();
+
+	for (Lifes* life : lifes)
+	{
+		delete life;
+	}
+	lifes.clear();
 }
 AppStatus Scene::Init()
 {
@@ -104,25 +110,6 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 
-	//Create lifes
-	/*for (int i = 0; i < MAX_BUBBLES; i++)
-	{
-		lifes.push_back(new Lifes(PLAYER_SPAWN));
-	}
-	if (lifes.empty())
-	{
-		LOG("Failed to allocate memory for Lifes");
-		return AppStatus::ERROR;
-	}
-	//Initialise lifes
-	for (Lifes* life : lifes) {
-		if (life->Initialise() != AppStatus::OK)
-		{
-			LOG("Failed to initialise Lifes");
-			return AppStatus::ERROR;
-		}
-	}
-	*/
 	//Create particle manager 
 	particles = new ParticleManager();
 	if (particles == nullptr)
@@ -170,6 +157,13 @@ AppStatus Scene::Init()
 
 	//Assign the shot manager reference to the enemy manager so enemies can add bubbles
 	player->SetShotManager(bubbles);
+
+	//Create static lifes
+	lifes.push_back(new Lifes({ 0,  624 }));
+	lifes.push_back(new Lifes({ 24, 624 }));
+	lifes.push_back(new Lifes({ 48, 624 }));
+	lifes.push_back(new Lifes({ 72, 624 }));
+	lifes.push_back(new Lifes({ 96, 624 }));
 
 	font1 = new Text();
 	if (font1 == nullptr)
@@ -420,6 +414,7 @@ AppStatus Scene::LoadLevel(int stage)
 			++i;
 		}
 	}
+
 	//Remove initial positions of objects and entities from the map
 	level->ClearObjectEntityPositions();
 
@@ -519,6 +514,8 @@ void Scene::CheckObjectCollisions()
 			++it;
 		}
 	}
+
+	lifes[player->GetLifes()]->SetAlive(false);
 }
 void Scene::CheckEnemiesCollisions()
 {
@@ -543,6 +540,13 @@ void Scene::RenderObjects() const
 		if (obj->IsAlive())
 		{
 			obj->Draw();
+		}
+	}
+	for (Lifes* life : lifes)
+	{
+		if (life->IsAlive())
+		{
+			life->Draw();
 		}
 	}
 }

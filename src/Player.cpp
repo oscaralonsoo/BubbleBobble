@@ -14,7 +14,7 @@ Player::Player(const Point& p, PlayerState s, Look view) :
 	jump_delay = PLAYER_JUMP_DELAY;
 	map = nullptr;
 	score = 0;
-	lifes = 2;
+	lifes = 4;
 }
 Player::~Player()
 {

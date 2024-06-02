@@ -1,16 +1,13 @@
-/*#pragma once
-#include "Point.h"
+#pragma once
+#include "Entity.h"
 
-#define LIFES_FRAME_SIZE		16
+#define LIFES_FRAME_SIZE		24
 
-class Lifes
+class Lifes : public Entity
 {
 public:
-	Lifes();
+	Lifes(const Point& p);
 	~Lifes();
-	AppStatus Initialise();
 
-	void DrawLifes();
 private:
-	RenderComponent* render;
-};*/
+};
